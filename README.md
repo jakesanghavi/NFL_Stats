@@ -1,7 +1,7 @@
 # NFL_Stats
 Repository for Scraping and Analyzing NFL Data
 
-**Steps to Downloading Data** \
+**Steps to Download Data** \
 If you would like, you can simply download all of the data files you need from this repository. If you would like to know how to do it yourself if this repository ever goes down, I have left steps below for you to get it yourself.
 
 1. Using get_nflfastR_pbp_data.R, download play by play data from as many seasons as you would like.
