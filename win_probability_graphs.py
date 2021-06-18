@@ -7,6 +7,7 @@ import seaborn as sns
 import os
 from matplotlib.offsetbox import OffsetImage
 
+# Dictionary of colors for the graph that map to team colors
 COLORS = {'ARI':'#97233F','ATL':'#A71930','BAL':'#241773','BUF':'#00338D','CAR':'#0085CA','CHI':'#00143F',
           'CIN':'#FB4F14','CLE':'#FB4F14','DAL':'#B0B7BC','DEN':'#002244','DET':'#046EB4','GB':'#24423C',
           'HOU':'#C9243F','IND':'#003D79','JAX':'#136677','KC':'#CA2430','LA':'#002147','LAC':'#2072BA',
@@ -14,12 +15,14 @@ COLORS = {'ARI':'#97233F','ATL':'#A71930','BAL':'#241773','BUF':'#00338D','CAR':
           'NYJ':'#203731','PHI':'#014A53','PIT':'#FFC20E','SEA':'#7AC142','SF':'#C9243F','TB':'#D40909',
           'TEN':'#4095D1','WAS':'#FFC20F'}
 
+# Input your play-by-play data here
 data = pd.read_csv('reg_season_play_by_play_2020.csv', low_memory=False)
 pd.options.mode.chained_assignment = None
 
 pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 300)
 
+# Input your desired game id here
 game_id = '2020_04_BAL_WAS'
 
 game_data = data.loc[data.game_id==game_id]
