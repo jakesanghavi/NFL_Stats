@@ -4,6 +4,8 @@ library(nflfastR)
 library(tidyverse)
 #devtools::install_github("mrcaseb/nflfastR")
 pbp_data_2020 <- readRDS(url('https://raw.githubusercontent.com/guga31bb/nflfastR-data/master/data/play_by_play_2020.rds'))
+
+#Replace these paths with your desired destination
 write.csv(pbp_data_2020, file = "C:/Users/jakes/Documents/nfl_2020_season_pbp_data.csv",row.names=FALSE)
 #pbp_data_2019 <- scrape_season_play_by_play(2019)
 #write.csv(pbp_data_2019, file = "C:/Users/jakes/Documents/nfl_2019_season_pbp_data.csv",row.names=FALSE)
