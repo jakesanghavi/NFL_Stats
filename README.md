@@ -10,6 +10,6 @@ If you would like, you can simply download all of the data files you need from t
 4. In order to merge the nflfastR and SportRadar data together, use nflfastR_SportRadar_concatenator.py.
 
 **Acknowledgements**
-Thank you to the entire nflfastR team for the code to grab play-by-play data, check out their GitHub at https://github.com/nflverse/nflfastR.\
-Thank you to Anthony Reinhardt for his code to merge nflfastR and SportRadar data together, check out his NFL GitHub repository at https://github.com/ajreinhard/NFL-public.\
+Thank you to the entire nflfastR team for the code to grab play-by-play data, check out their GitHub at https://github.com/nflverse/nflfastR. \
+Thank you to Anthony Reinhardt for his code to merge nflfastR and SportRadar data together, check out his NFL GitHub repository at https://github.com/ajreinhard/NFL-public. \
 And, thank you to Pavel Vab for his NFL Field Plot. His NFL GitHub repository can be found here: https://github.com/pavelvab/Football-Analytics.
