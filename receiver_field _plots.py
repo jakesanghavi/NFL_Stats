@@ -21,6 +21,7 @@ TEAMS = {'ARI':'CARDINALS','ATL':'FALCONS','BAL':'RAVENS','BUF':'BILLS','CAR':'P
           'NYJ':'JETS','PHI':'EAGLES','PIT':'STEELERS','SEA':'SEAHAWKS','SF':'49ERS','TB':'BUCCANEERS',
           'TEN':'TITANS','WAS':'WASHINGTON'}
 
+# Choose your desired season
 year = str(2020)
 
 data = pd.read_csv('reg_season_play_by_play_' + year + '.csv', low_memory=False)
