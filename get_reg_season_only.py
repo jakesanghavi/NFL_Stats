@@ -30,34 +30,6 @@ data.loc[data.desc.str.contains('left end|left tackle|left guard|up the middle|r
 # Calls passes on no plays runs
 data.loc[data.desc.str.contains('scrambles|sacked|pass'), 'play_type'] = 'pass'
 
-# no_plays = data.loc[data['play_type'] == 'no_play']
-#
-# run_no_plays = no_plays.loc[no_plays['desc'].str.contains('left end|left tackle|left guard|up the middle|right guard|right tackle|right end|rushes')]
-# pass_no_plays = no_plays.loc[no_plays['desc'].str.contains('scrambles|sacked|pass')]
-#
-# run_no_plays.play_type = 'rush'
-# pass_no_plays.play_type = 'pass'
-#
-# new_no_plays = pd.concat([run_no_plays, pass_no_plays])
-
-# for x in range(0, len(new_no_plays) - 1):
-#     print(x)
-#     if x >= 363:
-#         continue
-#     if len(new_no_plays.iloc[x]) == 0:
-#         print('naojdfn')
-#         continue
-#     put_in_id = new_no_plays['play_id'].iloc[x]
-#     put_in_game = new_no_plays['game_id'].iloc[x]
-#     selected_play = data[(data['play_id'].values == put_in_id) & (data['game_id'] == put_in_game)]
-#     if len(selected_play) == 0:
-#         print('naojdfn')
-#         continue
-#     g = selected_play.index.values[0]
-#     if g == 36743:
-#         continue
-#     data.iloc[g] = new_no_plays.iloc[x]
-
 data.play_type.loc[data['pass']==1] = 'pass'
 data.play_type.loc[data.rush==1] = 'run'
 data.reset_index(drop=True, inplace=True)
