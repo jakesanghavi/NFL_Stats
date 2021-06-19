@@ -129,8 +129,8 @@ plt.fill_between(wp_df['game_seconds_remaining'], wp_df['wp'], 0.50,where=(wp_df
 ax.set_title(str(game_year) + ' Season, Week ' + str(game_week) + ' - ' + str(away_team) + '(' + str(away_score) + ') @ ' + str(home_team) + '(' + str(home_score) + ')',fontsize=20,pad=15)
 ax.set_ylabel('Win Probability', fontsize=16,labelpad=15)
 
-home_pic = (os.getcwd() + "\Team_Logos"'\\' + home_team + '.png')
-away_pic = (os.getcwd() + "\Team_Logos"'\\' + away_team + '.png')
+home_pic = (os.getcwd() + "\Logo_Pack"'\\' + home_team + '.png')
+away_pic = (os.getcwd() + "\Logo_Pack"'\\' + away_team + '.png')
 home_pic = plt.imread(home_pic)
 away_pic = plt.imread(away_pic)
 
