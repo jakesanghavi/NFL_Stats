@@ -89,7 +89,7 @@ RightColor = COLORS[data['posteam'].iloc[0]]
 plt.text(5, 26.5, TEAMS[data['posteam'].iloc[0]], color=LeftColor, fontsize=30, verticalalignment='center', horizontalalignment='center', rotation=90)
 plt.text(115, 26.5, TEAMS[data['posteam'].iloc[0]], color=RightColor, fontsize=30, verticalalignment='center', horizontalalignment='center', rotation=270)
 
-team_logo = (os.getcwd() + "\Team_Logos"'\\' + data['posteam'].iloc[0] + '.png')
+team_logo = (os.getcwd() + "\Logo_Pack"'\\' + data['posteam'].iloc[0] + '.png')
 team_logo = plt.imread(team_logo)
 team_logo = OffsetImage(team_logo, zoom=0.50)
 team_logo.set_offset((750, 375))
