@@ -2,7 +2,7 @@
 Repository for Scraping and Analyzing NFL Data
 
 **Steps to Download Data** \
-If you would like, you can simply download all of the data files you need from this repository. If you would like to know how to do it yourself if this repository ever goes down, I have left steps below for you to get it yourself.
+If you would like, you can simply download all of the data files you need from this repository. Note that the data files are all zipped because they exceeded GitHub's filesize limit. If you would like to know how to do it yourself if this repository ever goes down, I have left steps below for you to get it yourself.
 
 1. Using get_nflfastR_pbp_data.R, download play by play data from as many seasons as you would like.
 2. In order to get the SportRadar data: create a SportRadar account, download the .xml/.json file for the season schedule, convert that file into .csv format, and the feed that file into scrape_SportRadar_games.py.
