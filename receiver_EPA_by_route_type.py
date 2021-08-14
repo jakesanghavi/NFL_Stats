@@ -23,8 +23,10 @@ def change_width(ax, new_value) :
         patch.set_x(patch.get_x() + diff * .5)
 
 
+year = 2020
+
 # Select your data file here
-data = pd.read_csv('reg_pbp_and_sportradar_2020.csv', low_memory=False)
+data = pd.read_csv(os.getcwd() + "\Data_Files"'\\reg_pbp_and_sportradar_' + year + '.csv', low_memory=False)
 pfr_data = pd.read_csv('pfr_totals_2020.csv')
 pd.options.mode.chained_assignment = None
 
