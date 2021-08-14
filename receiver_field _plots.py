@@ -84,8 +84,8 @@ data['air_yards_to'] = data['yardline_1'] + data['air_yards']
 data['yardline_2'] = data['yardline_1'] + data['air_yards'] + data['yards_after_catch']
 # data['yardline_2'] = data['yardline_1'] + data['yards_gained']
 data['sortable'] = data['yardline_2'] - data['yardline_1']
-# data = data.sort_values(['yardline_1', 'yardline_2'], ascending=[True, True])
-data = data.sort_values(['sortable', 'yardline_1'], ascending=[False, True])
+data = data.sort_values(['yardline_1', 'yardline_2'], ascending=[True, True])
+# data = data.sort_values(['sortable', 'yardline_1'], ascending=[False, True])
 data.reset_index(inplace=True)
 data['catch_number'] = data.index.values + 1
 data['catch_number'] = data['catch_number'] * (50/len(data))
