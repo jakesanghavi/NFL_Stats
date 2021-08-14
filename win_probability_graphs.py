@@ -15,7 +15,7 @@ COLORS = {'ARI':'#97233F','ATL':'#A71930','BAL':'#241773','BUF':'#00338D','CAR':
           'NYJ':'#203731','PHI':'#014A53','PIT':'#FFC20E','SEA':'#7AC142','SF':'#C9243F','TB':'#D40909',
           'TEN':'#4095D1','WAS':'#FFC20F'}
 
-year = 2020
+year = '2020'
 
 # Input your play-by-play data here
 data = pd.read_csv(os.getcwd() + "\Data_Files"'\\reg_season_play_by_play_' + year + '.csv', low_memory=False)
