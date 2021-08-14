@@ -6,8 +6,7 @@ import sys
 import urllib.request
 
 year = '2020'
-
-data = pd.read_csv('play_by_play_' + year + '.csv', low_memory=False, encoding='mac_roman')
+data = pd.read_csv(os.getcwd() + "\Data_Files"'\\play_by_play_' + year + '.csv', low_memory=False, encoding='mac_roman')
 pd.options.mode.chained_assignment = None
 
 pd.set_option('display.max_rows', 100)
