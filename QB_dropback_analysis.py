@@ -15,7 +15,7 @@ COLORS = {'ARI':'#97233F','ATL':'#A71930','BAL':'#241773','BUF':'#00338D','CAR':
 
 plt.rcParams["font.family"] = "monospace"
 
-data = pd.read_csv('reg_season_play_by_play_2020.csv', low_memory=False)
+data = pd.read_csv(os.getcwd() + "\Data_Files"'\\reg_season_play_by_play_' + year + '.csv', low_memory=False)
 pd.options.mode.chained_assignment = None
 
 pd.set_option('display.max_rows', 100)
