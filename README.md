@@ -9,9 +9,9 @@ If you would like, you can simply download all of the data files you need from t
 3. To prepare your new files for merging, feed the nflfastR data into get_reg_season_only.py, and feed the SportRadar data into SportRadar_updater.py.
 4. In order to merge the nflfastR and SportRadar data together, use nflfastR_SportRadar_concatenator.py.
 
-**Example Outputs** \
+**Example Outputs**
 
-![nflgit1](https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png)
+![nflgit1](https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png){:height="50%" width="50%"}
 
 ![nflgit2](https://user-images.githubusercontent.com/57878447/144541389-f892214a-cb72-434b-a4bc-53dbe2a83e36.png)
 
