@@ -11,7 +11,9 @@ If you would like, you can simply download all of the data files you need from t
 
 **Example Outputs**
 
-![nflgit1](https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png){:height="50%" width="50%"}
+![nflgit1](https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png)
+
+<img src="https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png" alt="Image 1" width=250/>
 
 ![nflgit2](https://user-images.githubusercontent.com/57878447/144541389-f892214a-cb72-434b-a4bc-53dbe2a83e36.png)
 
