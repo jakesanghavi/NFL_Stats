@@ -11,17 +11,11 @@ If you would like, you can simply download all of the data files you need from t
 
 **Example Outputs**
 
-![nflgit1](https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png)
-
-<img src="https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png" alt="Image 1" width=250/>
-
-![nflgit2](https://user-images.githubusercontent.com/57878447/144541389-f892214a-cb72-434b-a4bc-53dbe2a83e36.png)
-
-![nflgit3](https://user-images.githubusercontent.com/57878447/144541663-cd8c6139-0b30-4504-8697-868d6329301d.png)
-
-![nflgit3](https://user-images.githubusercontent.com/57878447/144541754-4e9656af-db47-4d4e-ac3c-d7aa3a9c4da6.png)
-
-![nflgit4](https://user-images.githubusercontent.com/57878447/144541900-d92356ca-2603-449e-b8c2-b4aacc678c21.png)
+<img src="https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png" alt="Image 1" width=700/>
+<img src="https://user-images.githubusercontent.com/57878447/144541389-f892214a-cb72-434b-a4bc-53dbe2a83e36.png" alt="Image 2" width=700/>
+<img src="https://user-images.githubusercontent.com/57878447/144541663-cd8c6139-0b30-4504-8697-868d6329301d.png" alt="Image 3" width=700/>
+<img src="https://user-images.githubusercontent.com/57878447/144541754-4e9656af-db47-4d4e-ac3c-d7aa3a9c4da6.png" alt="Image 4" width=700/>
+<img src="https://user-images.githubusercontent.com/57878447/144541900-d92356ca-2603-449e-b8c2-b4aacc678c21.png" alt="Image 5" width=700/>
 
 
 **Acknowledgements** \
