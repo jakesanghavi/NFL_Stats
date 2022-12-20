@@ -1,39 +1,43 @@
 import pandas as pd
-import matplotlib
-from matplotlib import pyplot as plt
-import numpy as np
-import sys
-import urllib.request
+import os
 
-year = '2020'
-data = pd.read_csv(os.getcwd() + "\Data_Files"'\\play_by_play_' + year + '.csv', low_memory=False, encoding='mac_roman')
+# Choose the year your want
+year = '2022'
+
+# This is the relative path for a Mac
+data = pd.read_csv(os.getcwd() + '/Data/nfl_' + year + '_pbp.csv', low_memory=False, encoding='mac_roman')
+
+# Below is the relative path for a PC
+# data = pd.read_csv(os.getcwd() + "\Data"'\\nfl_' + year + '+pbp.csv', low_memory=False, encoding='mac_roman')
+
+# These lines removes annoying/irrelevant warning messages
 pd.options.mode.chained_assignment = None
 
-pd.set_option('display.max_rows', 100)
-pd.set_option('display.max_columns', 300)
+# Get just regular season. This can be changed to 'POST' for postseason.
+data = data.loc[data.season_type == 'REG']
 
-data.drop(['passer_player_name', 'passer_player_id',
-           'rusher_player_name', 'rusher_player_id',
-           'receiver_player_name', 'receiver_player_id'],
-          axis=1, inplace=True)
+# Remove plays where the play time is weird or the epa does not exist
+data = data.loc[(data.play_type.isin(['no_play', 'pass', 'run'])) & (data.epa.notna())]
 
-data = data.loc[data.season_type=='REG']
-
-data = data.loc[(data.play_type.isin(['no_play','pass','run'])) & (data.epa.isna()==False)]
-
+# Remove "plays" that are just timeouts
 data = data.loc[data.timeout == 0]
 
-# Calls runs on no plays runs
-data.loc[data.desc.str.contains('left end|left tackle|left guard|up the middle|right guard|right tackle|right end|rushes'),
-'play_type'] = 'run'
-# Calls passes on no plays runs
+# Calls runs on no-plays runs
+data.loc[
+    data.desc.str.contains('left end|left tackle|left guard|up the middle|right guard|right tackle|right end|rushes'),
+    'play_type'] = 'run'
+
+# Calls passes on no-plays passes
 data.loc[data.desc.str.contains('scrambles|sacked|pass'), 'play_type'] = 'pass'
 
-data.play_type.loc[data['pass']==1] = 'pass'
-data.play_type.loc[data.rush==1] = 'run'
+# Update the play types and reset the index
+data.play_type.loc[data['pass'] == 1] = 'pass'
+data.play_type.loc[data.rush == 1] = 'run'
 data.reset_index(drop=True, inplace=True)
 
-data.to_csv('reg_season_play_by_play_' + year + '.csv')
+# Write your output to CSV to your desired path. Again, this is the Mac relative path. Update to PC if needed.
+data.to_csv(os.getcwd() + '/Data/nfl_' + year + '_pbp_reg.csv')
+
 
 # HELPFUL COLUMNS
 # posteam - the offensive team (possesion team)
