@@ -1,29 +1,10 @@
-# Get Whole Season of Data
-#library(devtools)
+# Load the required packages
 library(nflfastR)
 library(tidyverse)
-#devtools::install_github("mrcaseb/nflfastR")
-pbp_data_2020 <- readRDS(url('https://raw.githubusercontent.com/guga31bb/nflfastR-data/master/data/play_by_play_2020.rds'))
 
-#Replace these paths with your desired destination
-write.csv(pbp_data_2020, file = "C:/Users/jakes/Documents/nfl_2020_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2019 <- scrape_season_play_by_play(2019)
-#write.csv(pbp_data_2019, file = "C:/Users/jakes/Documents/nfl_2019_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2018 <- scrape_season_play_by_play(2018)
-#write.csv(pbp_data_2018, file = "C:/Users/jakes/Documents/nfl_2018_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2017 <- scrape_season_play_by_play(2017)
-#write.csv(pbp_data_2017, file = "C:/Users/jakes/Documents/nfl_2017_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2016 <- scrape_season_play_by_play(2016)
-#write.csv(pbp_data_2016, file = "C:/Users/jakes/Documents/nfl_2016_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2015 <- scrape_season_play_by_play(2015)
-#write.csv(pbp_data_2015, file = "C:/Users/jakes/Documents/nfl_2015_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2014 <- scrape_season_play_by_play(2014)
-#write.csv(pbp_data_2014, file = "C:/Users/jakes/Documents/nfl_2014_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2013 <- scrape_season_play_by_play(2013)
-#write.csv(pbp_data_2013, file = "C:/Users/jakes/Documents/nfl_2013_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2012 <- scrape_season_play_by_play(2012)
-#write.csv(pbp_data_2012, file = "C:/Users/jakes/Documents/nfl_2012_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2011 <- scrape_season_play_by_play(2011)
-#write.csv(pbp_data_2011, file = "C:/Users/jakes/Documents/nfl_2011_season_pbp_data.csv",row.names=FALSE)
-#pbp_data_2010 <- scrape_season_play_by_play(2010)
-#write.csv(pbp_data_2010, file = "C:/Users/jakes/Documents/nfl_2010_season_pbp_data.csv",row.names=FALSE)
+# Load the play by play data of your desired season. Note that this includes
+# penalties, no-plays, special teams, and postseason games.
+pbp_2022 <- load_pbp(2022)
+
+# Write the play by play data to your desired path.
+write.csv(pbp_2022, file = "nfl_2022_pbp.csv",row.names=FALSE)
