@@ -12,6 +12,20 @@ COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D'
           'NYJ': '#203731', 'PHI': '#014A53', 'PIT': '#FFC20E', 'SEA': '#7AC142', 'SF': '#C9243F', 'TB': '#D40909',
           'TEN': '#4095D1', 'WAS': '#FFC20F'}
 
+
+def adjust_seconds_remaining(row):
+    """
+    This function is to help vectorize an operation later on the code to adjust the time remaining in each row.
+
+    Parameters
+    ----------
+    row : pd.DataFrame row
+    """
+    if row['game_half'] == 'Overtime':
+        return row['game_seconds_remaining'] - (600 - extra_time)
+    return row['game_seconds_remaining'] + extra_time
+
+
 # Specify the season you want to look at
 year = '2022'
 
@@ -69,11 +83,7 @@ away_df = away_team_wp[['wp', 'game_seconds_remaining', 'game_half']]
 wp_df = pd.concat([home_df, away_df])
 
 # Deal with overtime in this unified DF
-for x in range(0, len(wp_df)):
-    if wp_df['game_half'].iloc[x] == 'Overtime':
-        wp_df['game_seconds_remaining'].iloc[x] -= (600 - extra_time)
-        continue
-    wp_df['game_seconds_remaining'].iloc[x] += extra_time
+wp_df['game_seconds_remaining'] = wp_df.apply(adjust_seconds_remaining, axis=1)
 
 # Sort the DF by time
 wp_df = wp_df.sort_values('game_seconds_remaining')
