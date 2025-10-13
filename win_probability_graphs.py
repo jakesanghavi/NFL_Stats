@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import os
 from matplotlib.offsetbox import OffsetImage
+from pathlib import Path
 
 # Dictionary of colors for the graph that map to team colors
 COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D', 'CAR': '#0085CA', 'CHI': '#00143F',
@@ -27,16 +28,18 @@ def adjust_seconds_remaining(row):
 
 
 # Specify the season you want to look at
-year = '2022'
+year = 2025
+
+filename = Path.cwd() / "DataPack" / f"complete_pbp_{year}.csv"
 
 # Input your play-by-play data here
-data = pd.read_csv(os.getcwd() + '/Data/nfl_' + year + '_pbp_reg.csv', low_memory=False)
+data = pd.read_csv(filename, low_memory=False)
 
 # Disable annoying warnings
 pd.options.mode.chained_assignment = None
 
 # Input your desired game id here
-game_id = '2022_15_IND_MIN'
+game_id = '2025_05_DEN_PHI'
 
 # Filter the data to only include data from your game.
 game_data = data.loc[data.game_id == game_id]
