@@ -7,6 +7,8 @@ from pathlib import Path
 from datetime import date
 import glob
 import re
+import urllib3
+import bs4
 
 
 def safe_get(d, *keys):
@@ -200,7 +202,6 @@ def get_nflfastr_ids(year):
 
     save_file(data, dirname, outfile)
 
-    data.to_csv(f'nflfastr_{year}_game_ids.csv', index=False)
     return data
 
 
@@ -222,7 +223,7 @@ def find_def_target_index(stats):
     return None
 
 
-def extract_play_flat(ply, qtr_number, drv_sequence, all_col_names):
+def extract_play_flat(ply, qtr_number, drv_sequence):
     stats = ply.get('statistics', []) or []
     rush_idx = find_stat_index_by_type(stats, 'rush')
     pass_idx = find_stat_index_by_type(stats, 'pass')
@@ -358,7 +359,7 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
                 drv_sequence = drv.get('sequence')
                 events = drv.get('events', []) or []
                 for ply in events:
-                    flat = extract_play_flat(ply, qtr_number, drv_sequence, ALL_COL_NAMES)
+                    flat = extract_play_flat(ply, qtr_number, drv_sequence)
                     flat['game_file'] = basename_without_ext(jfile)
                     all_game_rows.append(flat)
 
@@ -375,8 +376,7 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
             full_pbp_df[col] = None
     full_pbp_df = full_pbp_df[ALL_COL_NAMES]
 
-    sr_full_csv_path = sportradar_dirname / f"SportRadar_full_{year}.csv"
-    full_pbp_df.to_csv(sr_full_csv_path, index=False)
+    save_file(full_pbp_df, sportradar_dirname, f"SportRadar_full_{year}.csv")
 
     schedule_path = sportradar_dirname / f"sportradar_json_schedule_{year}.json"
 
@@ -511,8 +511,61 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
 
     out_dir = Path("DataPack")
 
-    out_combined_path = out_dir / f"complete_pbp_{year}.csv"
-    all_in_pbp.to_csv(out_combined_path, index=False)
+    all_filename = f"complete_pbp_{year}.csv"
+    save_file(all_in_pbp, out_dir, all_filename)
+
+
+def parse_row(row):
+    other_data = row.find_all("td")
+    if len(other_data) == 0:
+        return []
+    try:
+        tid = other_data[0].find_all("a")[0]["href"].replace("/players/", "").replace(".htm", "").split("/")[-1]
+    except IndexError:
+        return []
+    row_data = [td.string for td in other_data]
+    row_data.append(tid)
+    return row_data
+
+
+def player_totals_page(season):
+    return f"https://www.pro-football-reference.com/years/{season}/receiving.htm"
+
+
+def extract_column_names(table):
+    columns = [col["aria-label"] for col in table.find_all("thead")[0].find_all("tr")[1].find_all("th")][1:]
+    columns.append("id")
+    return columns
+
+
+def extract_rows(table):
+    rows = table.find_all("tbody")[0].find_all("tr")
+    parsed_rows = []
+    for r in rows:
+        parsed = parse_row(r)
+        if len(parsed) > 0:
+            parsed_rows.append(parsed)
+    return parsed_rows
+
+
+def get_pfr_data(year):
+    http = urllib3.PoolManager()
+    columns = []
+    rows = []
+
+    r = http.request('GET', player_totals_page(year))  # Request the page
+    soup = bs4.BeautifulSoup(r.data, "html.parser")  # Parse page with BeuatifulSoup
+    f = soup.find("table", id="receiving")  # Find the talbe
+    if len(f) > 0:  # Check to ensure the table is there
+        columns = extract_column_names(f)  # Extract column names from the table header
+        rows = rows + extract_rows(f)  # Extract data from table rows
+
+    frame = pd.DataFrame(rows)  # Convert rows to Dataframe
+
+    frame.columns = columns
+    dirname = Path.cwd() / "DataPack"
+    filename = f"pfr_receiving_totals_{year}.csv"
+    save_file(frame, dirname, filename)
 
 
 def get_all_data(year, api_key, min_week=1, max_week=17):
@@ -521,3 +574,4 @@ def get_all_data(year, api_key, min_week=1, max_week=17):
     get_sportradar_data(year, api_key, min_week, max_week)
     get_nflfastr_ids(year)
     merge_nflfastr_and_sportradar(year)
+    get_pfr_data(year)

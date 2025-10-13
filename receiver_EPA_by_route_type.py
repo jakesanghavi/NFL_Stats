@@ -1,18 +1,11 @@
 import pandas as pd
-import matplotlib
 from matplotlib import pyplot as plt
-import numpy as np
-import os
-import urllib.request
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import seaborn as sns
-import sys
-import scipy.stats as st
-import matplotlib.ticker as plticker
+from pathlib import Path
 
 
-def change_width(ax, new_value) :
-    for patch in ax.patches :
+def change_width(ax, new_value):
+    for patch in ax.patches:
         current_width = patch.get_width()
         diff = current_width - new_value
 
@@ -23,11 +16,15 @@ def change_width(ax, new_value) :
         patch.set_x(patch.get_x() + diff * .5)
 
 
-year = '2020'
+year = '2025'
+
+filename = Path.cwd() / "DataPack" / f"complete_pbp_{year}.csv"
 
 # Select your data file here
-data = pd.read_csv(os.getcwd() + "\Data_Files"'\\reg_pbp_and_sportradar_' + year + '.csv', low_memory=False)
-pfr_data = pd.read_csv('pfr_totals_2020.csv')
+data = pd.read_csv(filename, low_memory=False)
+
+pfr_filename = Path.cwd() / "DataPack" / f"pfr_receiving_totals_{year}.csv"
+pfr_data = pd.read_csv(pfr_filename)
 pd.options.mode.chained_assignment = None
 
 pd.set_option('display.max_rows', 100)
@@ -41,8 +38,8 @@ data = data.loc[data.play_type_sportradar == 'pass']
 data = data.loc[data.play_type == 'pass']
 
 routes = routes.drop_duplicates()
-routes_list=[]
-for x in range(0,len(routes)):
+routes_list = []
+for x in range(0, len(routes)):
     routes_list.append(routes.iloc[x])
 
 # team_name = input("Choose a Team: ")
@@ -54,47 +51,31 @@ player_name = first_name_char + last_name
 if title_name == 'D.K. Metcalf':
     player_name = 'DK.Metcalf'
 
-# data=data.loc[data.posteam==team_name]
-if title_name == 'Jarvis Landry':
-    data = data.loc[data.pass_route != 'Underneath Screen']
-data = data.loc[data.receiver==player_name]
+data = data.loc[data.receiver == player_name]
 data = data.loc[~data.desc.str.contains('No Play')]
 data.reset_index(inplace=True)
 
 for x in range(0, len(pfr_data)):
     pfr_data['Player'].iloc[x] = pfr_data['Player'].iloc[x].rsplit('\\', 1)[0]
-# pfr_data['Player']= pfr_data['Player'].rsplit('\\', 1)[0]
+
 pfr_data = pfr_data.loc[pfr_data.Player == title_name]
-print(pfr_data)
 
-# receiver_stats = data.loc[data['incomplete_pass'] == 0]
-# receiver_stats = receiver_stats.loc[~data.desc.str.contains('incomplete')]
-# receiver_stats = receiver_stats.loc[~data.desc.str.contains('No Play')]
-# receiver_stats = receiver_stats[receiver_stats['yards_after_catch'].notnull()]
-# receiver_stats.reset_index(inplace=True)
-
-routes_data = pd.DataFrame(data, columns=['epa','pass_route', 'success'])
+routes_data = pd.DataFrame(data, columns=['epa', 'pass_route', 'success'])
 routes_data['count'] = 0
 routes_data['total_epa'] = 1
 
-# for x in range(0, len(routes_data))
 
-for x in range(0,len(routes_data)):
+for x in range(0, len(routes_data)):
     route_count = len(routes_data.loc[routes_data.pass_route == routes_data.pass_route.iloc[x]])
     routes_data['count'].iloc[x] = route_count
     routes_data['total_epa'].iloc[x] = route_count * routes_data['epa'].iloc[x]
-    if(routes_data['pass_route'].iloc[x] == 'WR Screen'):
+    if routes_data['pass_route'].iloc[x] == 'WR Screen':
         routes_data['pass_route'].iloc[x] = 'WR Scrn'
-    if(routes_data['pass_route'].iloc[x] == 'Underneath Screen'):
+    if routes_data['pass_route'].iloc[x] == 'Underneath Screen':
         routes_data['pass_route'].iloc[x] = 'Undr Scrn'
-
-# for x in range(0,len(routes_data)):
-#     route_count = len(routes_data.loc[routes_data.pass_route == routes_data.pass_route.iloc[x]])
-#     routes_data['total_epa'].iloc[x] = route_count * routes_data['epa'].iloc[x]
 
 routes_data = routes_data.sort_values('pass_route')
 
-# fig,ax = plt.subplots(2,2, figsize=(15,8))
 fig = plt.figure()
 
 fig.suptitle('2020 Receiver Stats (When Targeted) by Route - ' + title_name
@@ -117,7 +98,6 @@ ax1.title.set_text('Route Frequency')
 ax1.set_xlabel('Route Type')
 ax1.set_ylabel('# Plays')
 ax1.tick_params(axis='x', which='major', labelsize=7)
-# ax1.set_xticklabels([1, 'keypoint', 2], fontsize=3)
 change_width(ax1, 1.)
 ax2.title.set_text('EPA/play by Route Type')
 ax2.set_xlabel('Route Type')
