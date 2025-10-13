@@ -7,7 +7,7 @@ from pathlib import Path
 from datetime import date
 
 
-def save_file(data, filename, directory="DataPack"):
+def save_file(data, directory, filename):
     cwd = Path.cwd()
     data_pack_dir = cwd / directory
 
@@ -32,7 +32,9 @@ def get_single_season_data(year):
                        compression='gzip', low_memory=False)
     filename = f"regular_season_pbp_{year}.csv"
 
-    save_file(data, filename, "DataPack")
+    dirname = Path("DataPack") / "nflFastR"
+
+    save_file(data, dirname, filename)
     return data
 
 
@@ -64,7 +66,8 @@ def get_current_sportradar_schedule(api_key, access_level="trial"):
             data = response.json()
             year = date.today().year
             filename = f"sportradar_json_schedule_{year}.csv"
-            save_file(data, "DataPack", filename)
+            dirname = Path("DataPack") / "SportRadar"
+            save_file(data, dirname, filename)
 
             games = [[]]
 
@@ -75,11 +78,11 @@ def get_current_sportradar_schedule(api_key, access_level="trial"):
             df = pd.DataFrame(games[1:], columns=["game_id", "week"])
             # Playoffs start after 100 I think
             df = df.loc[df['week'] < 100]
-            
+
             filename_csv = f"sportradar_schedule_{year}.csv"
-            
-            save_file(df, "DataPack", filename_csv)
-            
+
+            save_file(df, dirname, filename_csv)
+
             return data
 
         else:
@@ -100,18 +103,16 @@ def extract_data(url):
         'Connection': 'keep-alive',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
     }
-    
+
     r = requests.get(url, headers=header_data)
     resp = r.json()
     return resp
 
 
 def get_sportradar_data(year, api_key, min_week=1, max_week=17, access_level="trial", ids_file=None):
-    w_path = os.path.join(os.getcwd(), 'Data', 'SportRadar', year)
-
     if ids_file is None:
         year = date.today().year
-        ids_path = Path.cwd() / "DataPack" / f"sportradar_schedule_{year}.csv"
+        ids_path = Path.cwd() / "DataPack" / "SportRadar" / f"sportradar_schedule_{year}.csv"
         ids_file = pd.read_csv(ids_path)
         ids_file = ids_file.loc[(ids_file['week'] <= max_week) & (ids_file['week'] >= min_week)]
     for i, row in ids_file.iterrows():
@@ -119,9 +120,9 @@ def get_sportradar_data(year, api_key, min_week=1, max_week=17, access_level="tr
         game_url = f"http://api.sportradar.us/nfl/official/{access_level}/v7/en/games/{game_id}/pbp.json?api_key={api_key}"
 
         data = extract_data(game_url)
+        dirname = Path("DataPack") / "SportRadar" / str(year)
 
-        with open(os.path.join(w_path, game_id + '.json'), 'w') as f:
-            json.dump(data, f, indent=4)
-            
+        save_file(data, dirname, f'{game_id}.json')
+
         # Sleep to avoid blocking
         time.sleep(1)
