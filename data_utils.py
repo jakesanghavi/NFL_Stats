@@ -378,6 +378,8 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
 
     save_file(full_pbp_df, sportradar_dirname, f"SportRadar_full_{year}.csv")
 
+    full_pbp_df = full_pbp_df.loc[(full_pbp_df.play_type.isin(['penalty', 'pass', 'rush', 'conversion']))]
+
     schedule_path = sportradar_dirname / f"sportradar_json_schedule_{year}.json"
 
     if not os.path.isfile(schedule_path):
@@ -528,12 +530,12 @@ def parse_row(row):
     return row_data
 
 
-def player_totals_page(season):
-    return f"https://www.pro-football-reference.com/years/{season}/receiving.htm"
-
-
-def extract_column_names(table):
-    columns = [col["aria-label"] for col in table.find_all("thead")[0].find_all("tr")[1].find_all("th")][1:]
+def extract_column_names(table, dtype):
+    columns = []
+    if dtype == "receiving":
+        columns = [col["aria-label"] for col in table.find_all("thead")[0].find_all("tr")[1].find_all("th")][1:]
+    elif dtype == "passing":
+        columns = [col["aria-label"] for col in table.find_all("thead")[0].find_all("tr")[0].find_all("th")][1:]
     columns.append("id")
     return columns
 
@@ -548,16 +550,18 @@ def extract_rows(table):
     return parsed_rows
 
 
-def get_pfr_data(year):
+def get_pfr_receiving_data(year):
     http = urllib3.PoolManager()
     columns = []
     rows = []
 
-    r = http.request('GET', player_totals_page(year))  # Request the page
+    receiving_page = f"https://www.pro-football-reference.com/years/{year}/receiving.htm"
+
+    r = http.request('GET', receiving_page)  # Request the page
     soup = bs4.BeautifulSoup(r.data, "html.parser")  # Parse page with BeuatifulSoup
     f = soup.find("table", id="receiving")  # Find the talbe
     if len(f) > 0:  # Check to ensure the table is there
-        columns = extract_column_names(f)  # Extract column names from the table header
+        columns = extract_column_names(f, "receiving")  # Extract column names from the table header
         rows = rows + extract_rows(f)  # Extract data from table rows
 
     frame = pd.DataFrame(rows)  # Convert rows to Dataframe
@@ -568,10 +572,33 @@ def get_pfr_data(year):
     save_file(frame, dirname, filename)
 
 
+def get_pfr_passing_data(year):
+    http = urllib3.PoolManager()
+    columns = []
+    rows = []
+
+    qb_page = f"https://www.pro-football-reference.com/years/{year}/passing.htm"
+
+    r = http.request('GET', qb_page)  # Request the page
+    soup = bs4.BeautifulSoup(r.data, "html.parser")  # Parse page with BeuatifulSoup
+    f = soup.find("table", id="passing")  # Find the talbe
+    if len(f) > 0:  # Check to ensure the table is there
+        columns = extract_column_names(f, "passing")  # Extract column names from the table header
+        rows = rows + extract_rows(f)  # Extract data from table rows
+
+    frame = pd.DataFrame(rows)  # Convert rows to Dataframe
+
+    frame.columns = columns
+    dirname = Path.cwd() / "DataPack"
+    filename = f"pfr_passing_totals_{year}.csv"
+    save_file(frame, dirname, filename)
+
+
 def get_all_data(year, api_key, min_week=1, max_week=17):
     get_single_season_data(year)
     get_current_sportradar_schedule(api_key)
     get_sportradar_data(year, api_key, min_week, max_week)
     get_nflfastr_ids(year)
     merge_nflfastr_and_sportradar(year)
-    get_pfr_data(year)
+    get_pfr_receiving_data(year)
+    get_pfr_passing_data(year)
