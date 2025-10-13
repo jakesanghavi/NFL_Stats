@@ -19,8 +19,9 @@ plt.rcParams["font.family"] = "monospace"
 PLOT_TYPE = "headshots"
 
 year = 2025
+season_type = "reg"
 
-filepath = Path.cwd() / "DataPack" / f"complete_pbp_{year}.csv"
+filepath = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 
 data = pd.read_csv(filepath, low_memory=False)
 pd.options.mode.chained_assignment = None

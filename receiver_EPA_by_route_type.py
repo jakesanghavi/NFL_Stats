@@ -2,6 +2,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
 from pathlib import Path
+from difflib import SequenceMatcher
 
 
 def change_width(ax, new_value):
@@ -16,9 +17,10 @@ def change_width(ax, new_value):
         patch.set_x(patch.get_x() + diff * .5)
 
 
-year = '2025'
+year = 2025
+season_type = "reg"
 
-filename = Path.cwd() / "DataPack" / f"complete_pbp_{year}.csv"
+filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 
 # Select your data file here
 data = pd.read_csv(filename, low_memory=False)
@@ -51,7 +53,12 @@ player_name = first_name_char + last_name
 if title_name == 'D.K. Metcalf':
     player_name = 'DK.Metcalf'
 
-data = data.loc[data.receiver == player_name]
+best_match = max(
+    data.receiver.dropna().unique(),
+    key=lambda x: SequenceMatcher(None, player_name, x).ratio()
+)
+
+data = data.loc[data.receiver == best_match]
 data = data.loc[~data.desc.str.contains('No Play')]
 data.reset_index(inplace=True)
 
@@ -78,7 +85,7 @@ routes_data = routes_data.sort_values('pass_route')
 
 fig = plt.figure()
 
-fig.suptitle('2020 Receiver Stats (When Targeted) by Route - ' + title_name
+fig.suptitle(f'{year} Receiver Stats (When Targeted) by Route - ' + title_name
               + '\n'
              # 'Stats: Receptions=' + str(pfr_data['Rec'].iloc[0]) + ', Yards=' + str(pfr_data['Yds'].iloc[0]) + ', TD=' + str(pfr_data['TD'].iloc[0])
               + 'By Jake Sanghavi (data from nflfastR and SportRadar)'
@@ -119,5 +126,4 @@ plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, h
 # plt.savefig(title_name + '_2019_route_stats.png',dpi=800)
 
 plt.show()
-
 

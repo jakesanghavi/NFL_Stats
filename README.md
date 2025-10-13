@@ -1,11 +1,11 @@
 # NFL_Stats
 Repository for Scraping and Analyzing NFL Data
 
-## Steps to Download Data (Takes Just 5 minutes!)
-1. Clone this GitHub repo: `git clone https://github.com/jakesanghavi/NFL_Stats [FOLDER_NAME]`
+## Steps to Download Data (Takes Just 10 Minutes Total!)
+1. Clone this GitHub repo: `git clone https://github.com/jakesanghavi/NFL_Stats [PROJECT_FOLDER_NAME]`
 2. Sign up for a Sportradar account (free): [https://developer.sportradar.com/getting-started/docs/get-started](https://developer.sportradar.com/getting-started/docs/get-started) Choose the 30-day free trial plan for NFL data, which can be continually renewed for free. (Save your API Key somewhere you won't lose it!)
 3. Set up your Python environment to include the below dependencies
-4. Run `get_all_data.py` to get all relevant data for a given season, using your API key. This will save to various local files in `[PROJECT_ROOT]/DataPack/...` (You should run this every Tuesday morning during the season to refresh your data)
+4. Run `get_all_data.py` to get all relevant data for a given season, using your API key. This will save to various local files in `[PROJECT_FOLDER_NAME]/DataPack/...` (You should run this every Tuesday morning during the season to refresh your data)
 5. Use any of the files in the repo to perform some analysis! They will all work straight out of the box.
 
 **Wasn't that easy?**

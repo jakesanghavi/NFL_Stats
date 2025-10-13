@@ -14,10 +14,11 @@ COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D'
           'TEN': '#4095D1', 'WAS': '#FFC20F'}
 
 year = 2025
+season_type = "reg"
 
 plt.rcParams["font.family"] = "serif"
 
-filename = Path.cwd() / "DataPack" / f"complete_pbp_{year}.csv"
+filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 
 data = pd.read_csv(filename)
 

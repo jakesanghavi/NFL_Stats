@@ -57,8 +57,9 @@ class HandlerEllipse(HandlerPatch):
 
 
 year = 2025
+season_type = "reg"
 
-filename = Path.cwd() / "DataPack" / f"complete_pbp_{year}.csv"
+filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 
 data = pd.read_csv(filename, low_memory=False)
 pd.options.mode.chained_assignment = None
