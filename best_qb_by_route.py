@@ -20,7 +20,7 @@ plt.rcParams["font.family"] = "serif"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 
-data = pd.read_csv(filename)
+data = pd.read_csv(filename, low_memory=False)
 
 data['filter'] = data[['pass_route', 'passer']].isna().any(axis=1)
 data = data.loc[data['filter'] == False].drop(columns=['filter'])
@@ -112,7 +112,7 @@ fig.suptitle(f'Top Passers by Route Type - {year}',
              weight='bold',
              fontsize=16)
 
-fig.text(0.9, 0.05, 'Credit: Jake Sanghavi', fontsize=10, ha='center')
+fig.text(0.5, 0.91, 'by Jake Sanghavi', fontsize=12, ha='center')
 plt.subplots_adjust(wspace=0.15, hspace=0.15, left=0.05, right=0.95)
 
 plt.show()

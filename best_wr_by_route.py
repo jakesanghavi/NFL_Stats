@@ -20,7 +20,7 @@ plt.rcParams["font.family"] = "serif"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 
-data = pd.read_csv(filename)
+data = pd.read_csv(filename, low_memory=False)
 
 data['filter'] = data[['pass_route', 'receiver']].isna().any(axis=1)
 data = data.loc[data['filter'] == False].drop(columns=['filter'])

@@ -175,7 +175,7 @@ def get_sportradar_schedule(year, api_key, access_level="trial"):
                 df = pd.DataFrame(games[1:], columns=["game_id", "week"])
                 # df = df.loc[df['week'] < 100]
 
-                filename_csv = f"sportradar_{season_type}_schedule_{year}.csv"
+                filename_csv = f"sportradar_{season_type.replace('PST', 'POST')}_schedule_{year}.csv"
 
                 save_file(df, dirname, filename_csv)
 
