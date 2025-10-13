@@ -511,7 +511,7 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
 
     out_dir = Path("DataPack")
 
-    out_combined_path = out_dir / f"reg_pbp_and_sportradar_{year}.csv"
+    out_combined_path = out_dir / f"complete_pbp_{year}.csv"
     all_in_pbp.to_csv(out_combined_path, index=False)
 
 
