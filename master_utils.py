@@ -29,18 +29,18 @@ def save_file(data, directory, filename):
     full_path = data_pack_dir / filename
 
     if isinstance(data, pd.DataFrame):
-        if not full_path.lower().endswith('.csv'):
+        if not str(full_path).lower().endswith('.csv'):
             full_path = Path(full_path).stem + '.csv'
         data.to_csv(full_path, index=False)
     elif isinstance(data, (dict, list)):
-        if not full_path.lower().endswith('.json'):
+        if not str(full_path).lower().endswith('.json'):
             full_path = Path(full_path).stem + '.json'
         with open(full_path, 'w') as f:
             json.dump(data, f, indent=4)
     else:
         raise TypeError("Unsupported data type. Must be .json or .csv (Pandas DataFrame).")
-    
-    
+
+
 def get_regular_season_fastr_only(year, filepath=None):
     if filepath is None:
         filepath = Path.cwd() / "DataPack" / "nflFastR" / str(year) / f"nflfastr_pbp_{year}.csv"
@@ -70,7 +70,7 @@ def get_regular_season_fastr_only(year, filepath=None):
     data.play_type.loc[data['pass'] == 1] = 'pass'
     data.play_type.loc[data.rush == 1] = 'run'
     data.reset_index(drop=True, inplace=True)
-    
+
     out_dir = Path.cwd() / "DataPack" / "nflFastR" / str(year)
     out_file = f"reg_season_play_by_play_{year}.csv"
 
@@ -86,7 +86,7 @@ def get_single_season_data(year):
 
     save_file(data, dirname, filename)
     get_regular_season_fastr_only(year)
-    
+
     return data
 
 
@@ -164,15 +164,19 @@ def extract_data(url):
 def get_sportradar_data(year, api_key, min_week=1, max_week=17, access_level="trial", ids_file=None):
     if ids_file is None:
         year = date.today().year
-        ids_path = Path.cwd() / "DataPack" / "SportRadar" / f"sportradar_schedule_{year}.csv"
+        ids_path = Path.cwd() / "DataPack" / "SportRadar" / str(year) / f"sportradar_schedule_{year}.csv"
         ids_file = pd.read_csv(ids_path)
         ids_file = ids_file.loc[(ids_file['week'] <= max_week) & (ids_file['week'] >= min_week)]
+
+    dirname = Path.cwd() / "DataPack" / "SportRadar" / str(year)
     for i, row in ids_file.iterrows():
         game_id = row['game_id']
+        filename = dirname / f'{game_id}.json'
+        if os.path.isfile(filename):
+            continue
         game_url = f"http://api.sportradar.us/nfl/official/{access_level}/v7/en/games/{game_id}/pbp.json?api_key={api_key}"
 
         data = extract_data(game_url)
-        dirname = Path("DataPack") / "SportRadar" / str(year)
 
         save_file(data, dirname, f'{game_id}.json')
 
@@ -196,7 +200,7 @@ def get_nflfastr_ids(year):
 
     save_file(data, dirname, outfile)
 
-    data.to_csv('nflfastr_' + year + '_game_ids.csv', index=False)
+    data.to_csv(f'nflfastr_{year}_game_ids.csv', index=False)
     return data
 
 
@@ -500,3 +504,11 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
 
     out_combined_path = out_dir / f"reg_pbp_and_sportradar_{year}.csv"
     all_in_pbp.to_csv(out_combined_path, index=False)
+
+
+def get_all_data(year, api_key, min_week=1, max_week=17):
+    get_single_season_data(year)
+    get_current_sportradar_schedule(api_key)
+    get_sportradar_data(year, api_key, min_week, max_week)
+    get_nflfastr_ids(year)
+    merge_nflfastr_and_sportradar(year)
