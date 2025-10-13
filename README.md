@@ -1,15 +1,17 @@
 # NFL_Stats
 Repository for Scraping and Analyzing NFL Data
 
-**Steps to Download Data** \
-If you would like, you can simply download all of the data files you need from this repository. Note that the data files are all zipped because they exceed GitHub's filesize limit. If you would like to know how to do it yourself if this repository ever goes down, I have left steps below for you to get it yourself.
+## Steps to Download Data (Should take less than 5 minutes!)
+1. Clone this GitHub repo: `git clone https://github.com/jakesanghavi/NFL_Stats [FOLDER_NAME]`
+1. Sign up for a Sportradar account (free): [https://developer.sportradar.com/getting-started/docs/get-started](https://developer.sportradar.com/getting-started/docs/get-started)
+2. Choose the 30-day free trial plan for NFL data (you can renew this whenever you want, for free)
+3. Save your API Key somewhere you won't lose it
+4. Run `get_all_data.py` to get all relevant data for a given season. This will save to various local files in `[PROJECT_ROOT]/DataPack/...` (You should run this every Tuesday morning during the season to refresh your data)
+5. Use any of the files in the repo to perform some analysis! They will all work straight out of the box.
 
-1. Using get_nflfastR_pbp_data.R, download play by play data from as many seasons as you would like.
-2. In order to get the SportRadar data: create a SportRadar account, download the .xml/.json file for the season schedule, convert that file into .csv format, and the feed that file into scrape_SportRadar_games.py.
-3. To prepare your new files for merging, feed the nflfastR data into get_reg_season_only.py, and feed the SportRadar data into SportRadar_updater.py.
-4. In order to merge the nflfastR and SportRadar data together, use nflfastR_SportRadar_concatenator.py.
+**Wasn't that easy?**
 
-**Example Outputs**
+### Example Outputs
 
 <img src="https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png" alt="Image 1" width=700/>
 <img src="https://user-images.githubusercontent.com/57878447/144541389-f892214a-cb72-434b-a4bc-53dbe2a83e36.png" alt="Image 2" width=700/>
@@ -19,7 +21,7 @@ If you would like, you can simply download all of the data files you need from t
 <img src="https://user-images.githubusercontent.com/57878447/144542478-18e3dd24-ab29-429e-b6ef-adeb8515137b.png" alt="Image 6" width=500/>
 
 
-**Acknowledgements** \
-Thank you to the entire nflfastR team for the code to grab play-by-play data, check out their GitHub at https://github.com/nflverse/nflfastR. \
-Thank you to Anthony Reinhardt for his code to merge nflfastR and SportRadar data together, check out his NFL GitHub repository at https://github.com/ajreinhard/NFL-public. \
-And, thank you to Pavel Vab for his NFL Field Plot. His NFL GitHub repository can be found here: https://github.com/pavelvab/Football-Analytics.
+#### Acknowledgements. 
+Thank you to the entire nflfastR team for the code to grab play-by-play data, check out their GitHub at https://github.com/nflverse/nflfastR.  
+Thank you to Anthony Reinhardt for his code to merge nflfastR and SportRadar data together, check out his NFL GitHub repository at https://github.com/ajreinhard/NFL-public.  
+And, thank you to Pavel Vab for the base code provided to make an NFL Field Plot. His NFL GitHub repository can be found here: https://github.com/pavelvab/Football-Analytics.
