@@ -1,6 +1,7 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 from adjustText import adjust_text
+import os
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from svgpath2mpl import parse_path
 from termcolor import colored
@@ -9,6 +10,8 @@ from matplotlib.legend_handler import HandlerPatch
 from pathlib import Path
 import matplotlib.image as mpimg
 import plotting_utils
+from difflib import SequenceMatcher
+
 
 COLORS = plotting_utils.get_team_colors()
 COLORS2 = plotting_utils.get_team_alt_colors()
@@ -43,10 +46,16 @@ pfr_data = pd.read_csv(pfr_filename)
 pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 300)
 
-player_name = input("Receiver name: ")
-title_name = player_name
-first_name_char = player_name[0] + '.'
-last_name = player_name.split(' ', 1)[-1]
+player_name_input = input("Receiver name: ")
+
+best_match = max(
+    pfr_data.Player.dropna().unique(),
+    key=lambda x: SequenceMatcher(None, player_name_input, x).ratio()
+)
+
+title_name = best_match
+first_name_char = best_match[0] + '.'
+last_name = best_match.split(' ', 1)[-1]
 player_name = first_name_char + last_name
 
 if title_name == "DJ Moore":

@@ -217,7 +217,11 @@ def get_sportradar_data(year, api_key, min_week=1, max_week=17, access_level="tr
         for _, row in ids_file.iterrows():
             game_id = row['game_id']
             filename = dirname / f'{game_id}.json'
-            if os.path.isfile(filename):
+            
+            # Don't write a new file if the file already exists AND 
+            # the game was over 1 week ago
+            # Sometimes the sportradar data doesn't upload properly
+            if os.path.isfile(filename) and ids_file[ids_file['game_id'] == game_id]['week'].iloc[0] < max_week - 1:
                 continue
             game_url = f"http://api.sportradar.us/nfl/official/{access_level}/v7/en/games/{game_id}/pbp.json?api_key={api_key}"
 
@@ -640,9 +644,8 @@ def get_pfr_passing_data(year):
     save_file(frame, dirname, filename)
 
 
-def get_all_data(year, api_key):
+def get_all_data(year, api_key, min_week=1):
     today = date.today()
-    min_week = 1
 
     if today.year > year:
         max_week = 100

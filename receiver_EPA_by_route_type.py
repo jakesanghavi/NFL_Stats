@@ -45,20 +45,22 @@ for x in range(0, len(routes)):
     routes_list.append(routes.iloc[x])
 
 # team_name = input("Choose a Team: ")
-player_name = input("Choose a Receiver: ")
-title_name = player_name
-first_name_char = player_name[0] + '.'
-last_name = player_name.split(' ', 1)[-1]
+player_name_input = input("Choose a Receiver: ")
+
+best_match = max(
+    pfr_data.Player.dropna().unique(),
+    key=lambda x: SequenceMatcher(None, player_name_input, x).ratio()
+)
+
+title_name = best_match
+first_name_char = best_match[0] + '.'
+last_name = best_match.split(' ', 1)[-1]
 player_name = first_name_char + last_name
+
 if title_name == 'D.K. Metcalf':
     player_name = 'DK.Metcalf'
 
-best_match = max(
-    data.receiver.dropna().unique(),
-    key=lambda x: SequenceMatcher(None, player_name, x).ratio()
-)
-
-data = data.loc[data.receiver == best_match]
+data = data.loc[data.receiver == player_name]
 data = data.loc[~data.desc.str.contains('No Play')]
 data.reset_index(inplace=True)
 
