@@ -87,8 +87,7 @@ fig = plt.figure()
 
 fig.suptitle(f'{year} Receiver Stats (When Targeted) by Route - ' + title_name
               + '\n'
-             # 'Stats: Receptions=' + str(pfr_data['Rec'].iloc[0]) + ', Yards=' + str(pfr_data['Yds'].iloc[0]) + ', TD=' + str(pfr_data['TD'].iloc[0])
-              + 'By Jake Sanghavi (data from nflfastR and SportRadar)'
+             'Stats: Receptions=' + str(pfr_data['Rec'].iloc[0]) + ', Yards=' + str(pfr_data['Yds'].iloc[0]) + ', TD=' + str(pfr_data['TD'].iloc[0])
             )
 
 ax1 = fig.add_subplot(221)
@@ -122,8 +121,9 @@ ax4.set_ylabel('Total EPA')
 ax4.tick_params(axis='x', which='major', labelsize=7)
 change_width(ax4, 1.)
 
+fig.text(0.85, 0.06, 'Credit: Jake Sanghavi', fontsize=8, ha='center')
+
 plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.22)
 # plt.savefig(title_name + '_2019_route_stats.png',dpi=800)
 
 plt.show()
-

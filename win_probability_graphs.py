@@ -158,6 +158,8 @@ away_pic.set_offset((850, 4500))
 ax.add_artist(home_pic)
 ax.add_artist(away_pic)
 
+ax.text(max_game_seconds, -0.05, "Credit: Jake Sanghavi", fontsize=10)
+
 # Save the image, properly formatted, to your desired path.
 plt.savefig(game_id + '_wp.png', dpi=400)
 

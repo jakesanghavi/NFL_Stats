@@ -101,10 +101,10 @@ ax.spines['bottom'].set_zorder(999)
 ax.spines['left'].set_zorder(999)
 
 # Add title, labels, and source
-ax.set_title(f'QB Dropback Analysis - {year}' + '\n' + 'by Jake Sanghavi', fontsize=20, pad=15)
+ax.set_title(f'QB Dropback Analysis - {year}', fontsize=20, pad=15)
 ax.set_xlabel('Completion % Over Expected (CPOE)', fontsize=16, labelpad=15)
 ax.set_ylabel('EPA per Attempt', fontsize=16, labelpad=15)
-plt.figtext(.8, .06, 'Data: nflfastR', fontsize=12)
+plt.figtext(.75, .06, 'Credit: Jake Sanghavi', fontsize=10)
 
 ax.set_facecolor('peachpuff')
 fig.patch.set_facecolor('wheat')

@@ -112,7 +112,7 @@ fig.suptitle(f'Top Passers by Route Type - {year}',
              weight='bold',
              fontsize=16)
 
-fig.text(0.5, 0.91, 'by Jake Sanghavi', fontsize=12, ha='center')
+fig.text(0.9, 0.05, 'Credit: Jake Sanghavi', fontsize=10, ha='center')
 plt.subplots_adjust(wspace=0.15, hspace=0.15, left=0.05, right=0.95)
 
 plt.show()

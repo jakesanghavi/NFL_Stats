@@ -1,7 +1,6 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 from adjustText import adjust_text
-import os
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from svgpath2mpl import parse_path
 from termcolor import colored
@@ -9,38 +8,12 @@ import matplotlib.patches as mpatches
 from matplotlib.legend_handler import HandlerPatch
 from pathlib import Path
 import matplotlib.image as mpimg
+import plotting_utils
 
-COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D', 'CAR': '#0085CA', 'CHI': '#00143F',
-          'CIN': '#FB4F14', 'CLE': '#FB4F14', 'DAL': '#B0B7BC', 'DEN': '#002244', 'DET': '#046EB4', 'GB': '#24423C',
-          'HOU': '#C9243F', 'IND': '#003D79', 'JAX': '#136677', 'KC': '#CA2430', 'LA': '#002147', 'LAC': '#2072BA',
-          'LV': '#C4C9CC', 'MIA': '#0091A0', 'MIN': '#4F2E84', 'NE': '#0A2342', 'NO': '#A08A58', 'NYG': '#192E6C',
-          'NYJ': '#203731', 'PHI': '#014A53', 'PIT': '#FFC20E', 'SEA': '#7AC142', 'SF': '#C9243F', 'TB': '#D40909',
-          'TEN': '#4095D1', 'WAS': '#FFC20F'}
-COLORS2 = {'ARI': '#000000', 'ATL': '#000000', 'BAL': '#000000', 'BUF': '#c60c30', 'CAR': '#000000', 'CHI': '#c83803',
-           'CIN': '#fb4f14', 'CLE': '#22150c', 'DAL': '#b0b7bc', 'DEN': '#fb4f14', 'DET': '#b0b7bc', 'GB': '#ffb612',
-           'HOU': '#a71930', 'IND': '#a5acaf', 'JAX': '#006778', 'KC': '#ffb612', 'LA': '#b3995d', 'LAC': '#0073cf',
-           'LV': '#000000', 'MIA': '#f58220', 'MIN': '#ffc62f', 'NE': '#c60c30', 'NO': '#000000', 'NYG': '#a71930',
-           'NYJ': '#1c2d25', 'PHI': '#a5acaf', 'PIT': '#ffb612', 'SEA': '#69be28', 'SF': '#b3995d', 'TB': '#34302b',
-           'TEN': '#4b92db', 'WAS': '#ffb612'}
-
-TEAMS = {'ARI': 'CARDINALS', 'ATL': 'FALCONS', 'BAL': 'RAVENS', 'BUF': 'BILLS', 'CAR': 'PANTHERS', 'CHI': 'BEARS',
-         'CIN': 'BENGALS', 'CLE': 'BROWNS', 'DAL': 'COWBOYS', 'DEN': 'BRONCOS', 'DET': 'LIONS', 'GB': 'PACKERS',
-         'HOU': 'TEXANS', 'IND': 'COLTS', 'JAX': 'JAGUARS', 'KC': 'CHIEFS', 'LA': 'RAMS', 'LAC': 'CHARGERS',
-         'LV': 'RAIDERS', 'MIA': 'DOLPHINS', 'MIN': 'VIKINGS', 'NE': 'PATRIOTS', 'NO': 'SAINTS', 'NYG': 'GIANTS',
-         'NYJ': 'JETS', 'PHI': 'EAGLES', 'PIT': 'STEELERS', 'SEA': 'SEAHAWKS', 'SF': '49ERS', 'TB': 'BUCCANEERS',
-         'TEN': 'TITANS', 'WAS': 'WASHINGTON'}
-
-TAGS = {'ARI': '#RedSea', 'ATL': '#RiseUpATL', 'BAL': '#RavensFlock', 'BUF': '#BillsMafia', 'CAR': '#KeepPounding',
-        'CHI': '#DaBears',
-        'CIN': '#SEIZETHEDEY', 'CLE': '#Browns', 'DAL': '#DallasCowboys', 'DEN': '#BroncosCountry', 'DET': '#OnePride',
-        'GB': '#GoPackGo',
-        'HOU': '#WeAreTexans', 'IND': '#ForTheShoe', 'JAX': '#DUUUVAL', 'KC': '#ChiefsKingdom', 'LA': '#RamsHouse',
-        'LAC': '#BoltUp',
-        'LV': '#RaiderNation', 'MIA': '#FinsUp', 'MIN': '#Skol', 'NE': '#GoPats', 'NO': '#Saints',
-        'NYG': '#TogetherBlue',
-        'NYJ': '#JetsNation', 'PHI': '#FlyEaglesFly', 'PIT': '#HereWeGo', 'SEA': '#Seahawks', 'SF': '#FTTB',
-        'TB': '#GoBucs',
-        'TEN': '#Titans', 'WAS': '#WashingtonFootball'}
+COLORS = plotting_utils.get_team_colors()
+COLORS2 = plotting_utils.get_team_alt_colors()
+TEAMS = plotting_utils.get_team_names()
+TAGS = plotting_utils.get_team_tags()
 
 hfont = {'family': 'monospace'}
 
@@ -64,6 +37,9 @@ filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 data = pd.read_csv(filename, low_memory=False)
 pd.options.mode.chained_assignment = None
 
+pfr_filename = Path.cwd() / "DataPack" / f"pfr_receiving_totals_{year}.csv"
+pfr_data = pd.read_csv(pfr_filename)
+
 pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 300)
 
@@ -83,6 +59,12 @@ data = data.loc[~data.desc.str.contains('incomplete')]
 data = data.loc[~data.desc.str.contains('No Play')]
 data = data.loc[data.play_type != 'no_play']
 data.reset_index(inplace=True)
+
+for x in range(0, len(pfr_data)):
+    pfr_data['Player'].iloc[x] = pfr_data['Player'].iloc[x].rsplit('\\', 1)[0]
+
+pfr_data = pfr_data.loc[pfr_data.Player == title_name]
+
 data = data[data['yards_after_catch'].notnull()]
 data['yardline_1'] = 100 - data['yardline_100'] + 10
 data['air_yards_to'] = data['yardline_1'] + data['air_yards']
@@ -166,26 +148,38 @@ ab = AnnotationBbox(logo_image, (x_rel, y_rel),
 team_logo = OffsetImage(team_logo, zoom=zoom)
 ax.add_artist(ab)
 
-ax.scatter(data['air_yards_to'], data['catch_number'], color='y', zorder=2)
-ax.scatter(data['yardline_1'], data['catch_number'], color='b', zorder=2)
-ax.scatter(data['yardline_2'], data['catch_number'], color='r', zorder=2)
+ax.scatter(data['air_yards_to'], data['catch_number'], color='y', zorder=3)
+ax.scatter(data['yardline_1'], data['catch_number'], color='b', zorder=3)
+ax.scatter(data['yardline_2'], data['catch_number'], color='r', zorder=3)
 
 for x in range(0, len(data)):
     ax.hlines(y=data['catch_number'].iloc[x], xmin=data['yardline_1'].iloc[x], xmax=data['air_yards_to'].iloc[x],
-              color='b')
+              color='b', zorder=2)
     ax.hlines(y=data['catch_number'].iloc[x], xmin=data['air_yards_to'].iloc[x], xmax=data['yardline_2'].iloc[x],
-              color='y')
+              color='y', zorder=2)
     if data.pass_touchdown.iloc[x] == 1:
-        ax.scatter(data['yardline_2'].iloc[x], data['catch_number'].iloc[x], color='g')
+        ax.scatter(data['yardline_2'].iloc[x], data['catch_number'].iloc[x], color='g', zorder=5)
 
 plt.xticks([])
 plt.yticks([])
 
-ax.set_title(f"{title_name} {year} Receptions Chart" + "\n" + "by Jake Sanghavi", fontsize=20, pad=15, **hfont)
+ax.set_title(
+    f"{title_name} {year} Receptions Chart\n",
+    fontsize=20, pad=15, **hfont
+)
+
+# Reduce size of second line by 2 points
+ax.title.set_fontsize(20)
+ax.title.set_linespacing(1.2)
+ax.text(0.5, 1.02,
+        f"Stats - Receptions: {pfr_data['Rec'].iloc[0]}, Yards: {pfr_data['Yds'].iloc[0]}, TD: {pfr_data['TD'].iloc[0]}",
+        transform=ax.transAxes, ha='center', va='bottom', fontsize=14, **hfont,
+        style='italic')
 
 # plt.savefig('receiver_graph_test.png', dpi=400)
 
 plt.text(2.5, -1.8, TAGS[data['posteam'].iloc[0]], fontsize=12, **hfont)
+plt.text(100, -1.8, "Credit: Jake Sanghavi", fontsize=10, **hfont)
 
 c = [mpatches.Circle((0.5, 0.5), radius=0.25, facecolor='b', edgecolor="none"),
      mpatches.Circle((0.5, 0.5), radius=0.25, facecolor='y', edgecolor="none"),
