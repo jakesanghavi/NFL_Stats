@@ -21,33 +21,33 @@ filename = Path.cwd() / "DataPack" / f"complete_pbp_{year}.csv"
 
 data = pd.read_csv(filename)
 
-data['filter'] = data[['pass_route', 'receiver']].isna().any(axis=1)
+data['filter'] = data[['pass_route', 'passer']].isna().any(axis=1)
 data = data.loc[data['filter'] == False].drop(columns=['filter'])
 data['pass_route'] = np.where((data['pass_route'] == 'Underneath Screen') | (data['pass_route'] == 'WR Screen'),
                               'Screen', data['pass_route'])
 
-grp = data.groupby(by=['posteam', 'receiver', 'pass_route', 'receiver_id'], as_index=False).agg(
+grp = data.groupby(by=['posteam', 'passer', 'pass_route', 'passer_id'], as_index=False).agg(
     {'play_id': 'size', 'complete_pass': 'sum', 'cpoe': 'sum', 'epa': ['mean', 'sum']})
 
-grp.columns = ['posteam', 'player', 'route', 'rec_id', 'targets', 'receptions', 'CPOE', 'EPA_avg', 'EPA_tot']
+grp.columns = ['posteam', 'player', 'route', 'qb_id', 'targets', 'receptions', 'CPOE', 'EPA_avg', 'EPA_tot']
 min_targets = 3
 
 fig, axes = plt.subplots(2, 2)
 
 max_rec_ixs = grp.groupby('route')['targets'].idxmax()
-rec_leaders = grp.loc[max_rec_ixs, ['route', 'player', 'posteam', 'rec_id']]
+rec_leaders = grp.loc[max_rec_ixs, ['route', 'player', 'posteam', 'qb_id']]
 rec_leaders['targets'] = grp.groupby('route')['targets'].max().values
 
 max_tot_epa_ixs = grp.groupby('route')['EPA_tot'].idxmax()
-tot_epa_leaders = grp.loc[max_tot_epa_ixs, ['route', 'player', 'posteam', 'rec_id']]
+tot_epa_leaders = grp.loc[max_tot_epa_ixs, ['route', 'player', 'posteam', 'qb_id']]
 tot_epa_leaders['tot_epa'] = grp.groupby('route')['EPA_tot'].max().values
 
 max_cpoe_ixs = grp.groupby('route')['CPOE'].idxmax()
-cpoe_leaders = grp.loc[max_cpoe_ixs, ['route', 'player', 'posteam', 'rec_id']]
+cpoe_leaders = grp.loc[max_cpoe_ixs, ['route', 'player', 'posteam', 'qb_id']]
 cpoe_leaders['CPOE'] = grp.groupby('route')['CPOE'].max().values
 
 max_avg_epa_ixs = grp.loc[grp['targets'] >= min_targets].groupby('route')['EPA_avg'].idxmax()
-avg_epa_leaders = grp.loc[grp['targets'] >= min_targets].loc[max_avg_epa_ixs, ['route', 'player', 'posteam', 'rec_id']]
+avg_epa_leaders = grp.loc[grp['targets'] >= min_targets].loc[max_avg_epa_ixs, ['route', 'player', 'posteam', 'qb_id']]
 avg_epa_leaders['avg_epa'] = grp.loc[grp['targets'] >= min_targets].groupby('route')['EPA_avg'].max().values
 
 common_width = 40
@@ -63,7 +63,7 @@ def plot_bar(ax, df, stat, title, y_title):
 
         path = Path.cwd() / "Logo_Pack" / f"{df['posteam'].iloc[i]}.png"
         try:
-            img = plotting_utils.get_player_headshot(df['rec_id'].iloc[i])
+            img = plotting_utils.get_player_headshot(df['qb_id'].iloc[i])
         except requests.exceptions.HTTPError:
             img = plt.imread(path)
 
@@ -106,7 +106,7 @@ plot_bar(axes[1][0], cpoe_leaders, 'CPOE', f'Aggregate CPOE Leaders', 'Aggregate
 plot_bar(axes[1][1], avg_epa_leaders, 'avg_epa', f'EPA/Play Leaders - Min. {min_targets} Targets', 'EPA/Play')
 
 fig.patch.set_facecolor('#F5DEB3')
-fig.suptitle(f'Top Receivers by Route Type - {year}',
+fig.suptitle(f'Top Passers by Route Type - {year}',
              y=0.95,
              weight='bold',
              fontsize=16)
