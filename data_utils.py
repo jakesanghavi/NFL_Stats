@@ -9,6 +9,7 @@ import glob
 import re
 import urllib3
 import bs4
+import datetime
 
 
 def safe_get(d, *keys):
@@ -203,9 +204,10 @@ def extract_data(url):
 
 
 def get_sportradar_data(year, api_key, min_week=1, max_week=17, access_level="trial", ids_file=None):
+    today = date.today()
     for season_type in ["REG", "PST"]:
         if ids_file is None:
-            year = date.today().year
+            year = today.year
             ids_path = Path.cwd() / "DataPack" / "SportRadar" / str(
                 year) / "Games" / season_type / f"sportradar_{season_type}_schedule_{year}.csv"
             ids_file = pd.read_csv(ids_path)
@@ -638,7 +640,30 @@ def get_pfr_passing_data(year):
     save_file(frame, dirname, filename)
 
 
-def get_all_data(year, api_key, min_week=1, max_week=17):
+def get_all_data(year, api_key):
+    today = date.today()
+    min_week = 1
+
+    if today.year > year:
+        max_week = 100
+    elif today.year == year:
+        # First NFL game of {year} season
+        sept_first = datetime.date(year, 9, 1)
+        days_to_add = (3 - sept_first.weekday()) % 7
+        first_thursday_in_september = sept_first + datetime.timedelta(days=days_to_add)
+
+        # Most recent Sunday to current day
+        thursday_based_weekday = (today.weekday() + 1) % 7
+        days_to_subtract = thursday_based_weekday
+        recent_thursday = today - datetime.timedelta(days=days_to_subtract)
+
+        if recent_thursday < first_thursday_in_september:
+            raise ValueError(f"No data available yet for {year}.")
+        time_difference = recent_thursday - first_thursday_in_september
+        max_week = time_difference.days // 7 + 1
+    else:
+        raise ValueError("Year cannot be greater than current year.")
+
     get_single_season_data(year)
     get_sportradar_schedule(year, api_key)
     get_sportradar_data(year, api_key, min_week, max_week)
