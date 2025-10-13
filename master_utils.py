@@ -487,15 +487,24 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
 
     same_yr_pbp['game_id'] = same_yr_pbp['game_id'].astype(str)
     same_yr_pbp['play_id'] = same_yr_pbp['play_id'].astype(str)
+
+    same_yr_pbp['row_index1'] = (
+            same_yr_pbp.groupby('game_id').cumcount() + 1
+    )
+
     merged_all_gm_df['game_id_scrp'] = merged_all_gm_df['game_id_scrp'].astype(str)
     merged_all_gm_df['play_ref'] = merged_all_gm_df['play_ref'].astype(str)
+
+    merged_all_gm_df['row_index2'] = (
+            merged_all_gm_df.groupby('game_id_scrp').cumcount() + 1
+    )
 
     # Final joining
     all_in_pbp = pd.merge(
         same_yr_pbp,
         merged_all_gm_df,
-        left_on=['game_id', 'play_id'],
-        right_on=['game_id_scrp', 'play_ref'],
+        left_on=['game_id', 'row_index1'],
+        right_on=['game_id_scrp', 'row_index2'],
         how='left',
         suffixes=('', '_sportradar')
     )
