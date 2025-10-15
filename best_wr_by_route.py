@@ -15,12 +15,14 @@ COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D'
 
 year = 2025
 season_type = "reg"
+min_targets = 4
 
 plt.rcParams["font.family"] = "serif"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 
 data = pd.read_csv(filename, low_memory=False)
+max_week = np.max(data['week'])
 
 data['filter'] = data[['pass_route', 'receiver']].isna().any(axis=1)
 data = data.loc[data['filter'] == False].drop(columns=['filter'])
@@ -28,10 +30,9 @@ data['pass_route'] = np.where((data['pass_route'] == 'Underneath Screen') | (dat
                               'Screen', data['pass_route'])
 
 grp = data.groupby(by=['posteam', 'receiver', 'pass_route', 'receiver_id'], as_index=False).agg(
-    {'play_id': 'size', 'complete_pass': 'sum', 'cpoe': 'sum', 'epa': ['mean', 'sum']})
+    {'play_id': 'size', 'complete_pass': 'sum', 'success': 'mean', 'cpoe': 'sum', 'epa': ['mean', 'sum']})
 
-grp.columns = ['posteam', 'player', 'route', 'rec_id', 'targets', 'receptions', 'CPOE', 'EPA_avg', 'EPA_tot']
-min_targets = 3
+grp.columns = ['posteam', 'player', 'route', 'rec_id', 'targets', 'receptions', 'success_rate', 'CPOE', 'EPA_avg', 'EPA_tot']
 
 fig, axes = plt.subplots(2, 2)
 
@@ -50,6 +51,11 @@ cpoe_leaders['CPOE'] = grp.groupby('route')['CPOE'].max().values
 max_avg_epa_ixs = grp.loc[grp['targets'] >= min_targets].groupby('route')['EPA_avg'].idxmax()
 avg_epa_leaders = grp.loc[grp['targets'] >= min_targets].loc[max_avg_epa_ixs, ['route', 'player', 'posteam', 'rec_id']]
 avg_epa_leaders['avg_epa'] = grp.loc[grp['targets'] >= min_targets].groupby('route')['EPA_avg'].max().values
+
+# # Can use this if you want
+# max_success_ixs = grp.loc[grp['targets'] >= min_targets].groupby('route')['success_rate'].idxmax()
+# avg_success_leaders = grp.loc[grp['targets'] >= min_targets].loc[max_success_ixs, ['route', 'player', 'posteam', 'rec_id']]
+# avg_success_leaders['success_rate'] = grp.loc[grp['targets'] >= min_targets].groupby('route')['success_rate'].max().values
 
 common_width = 40
 
@@ -105,9 +111,10 @@ plot_bar(axes[0][0], rec_leaders, 'targets', 'Target Leaders', 'Targets')
 plot_bar(axes[0][1], tot_epa_leaders, 'tot_epa', 'Total EPA Leaders', 'Total EPA')
 plot_bar(axes[1][0], cpoe_leaders, 'CPOE', f'Aggregate CPOE Leaders', 'Aggregate CPOE')
 plot_bar(axes[1][1], avg_epa_leaders, 'avg_epa', f'EPA/Play Leaders - Min. {min_targets} Targets', 'EPA/Play')
+# plot_bar(axes[1][1], avg_success_leaders, 'success_rate', f'Success Rate Leaders - Min. {min_targets} Targets', 'Success Rate')
 
 fig.patch.set_facecolor('#F5DEB3')
-fig.suptitle(f'Top Receivers by Route Type - {year}',
+fig.suptitle(f'Top Receivers by Route Thru Week {max_week}, {year}',
              y=0.95,
              weight='bold',
              fontsize=16)

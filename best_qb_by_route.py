@@ -15,12 +15,14 @@ COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D'
 
 year = 2025
 season_type = "reg"
+min_attempts = 4
 
 plt.rcParams["font.family"] = "serif"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 
 data = pd.read_csv(filename, low_memory=False)
+max_week = np.max(data['week'])
 
 data['filter'] = data[['pass_route', 'passer']].isna().any(axis=1)
 data = data.loc[data['filter'] == False].drop(columns=['filter'])
@@ -31,7 +33,6 @@ grp = data.groupby(by=['posteam', 'passer', 'pass_route', 'passer_id'], as_index
     {'play_id': 'size', 'complete_pass': 'sum', 'cpoe': 'sum', 'epa': ['mean', 'sum']})
 
 grp.columns = ['posteam', 'player', 'route', 'qb_id', 'targets', 'receptions', 'CPOE', 'EPA_avg', 'EPA_tot']
-min_targets = 3
 
 fig, axes = plt.subplots(2, 2)
 
@@ -47,9 +48,14 @@ max_cpoe_ixs = grp.groupby('route')['CPOE'].idxmax()
 cpoe_leaders = grp.loc[max_cpoe_ixs, ['route', 'player', 'posteam', 'qb_id']]
 cpoe_leaders['CPOE'] = grp.groupby('route')['CPOE'].max().values
 
-max_avg_epa_ixs = grp.loc[grp['targets'] >= min_targets].groupby('route')['EPA_avg'].idxmax()
-avg_epa_leaders = grp.loc[grp['targets'] >= min_targets].loc[max_avg_epa_ixs, ['route', 'player', 'posteam', 'qb_id']]
-avg_epa_leaders['avg_epa'] = grp.loc[grp['targets'] >= min_targets].groupby('route')['EPA_avg'].max().values
+max_avg_epa_ixs = grp.loc[grp['targets'] >= min_attempts].groupby('route')['EPA_avg'].idxmax()
+avg_epa_leaders = grp.loc[grp['targets'] >= min_attempts].loc[max_avg_epa_ixs, ['route', 'player', 'posteam', 'qb_id']]
+avg_epa_leaders['avg_epa'] = grp.loc[grp['targets'] >= min_attempts].groupby('route')['EPA_avg'].max().values
+
+# # Can use this if you want
+# max_success_ixs = grp.loc[grp['targets'] >= min_attempts].groupby('route')['success_rate'].idxmax()
+# avg_success_leaders = grp.loc[grp['targets'] >= min_attempts].loc[max_success_ixs, ['route', 'player', 'posteam', 'qb_id']]
+# avg_success_leaders['success_rate'] = grp.loc[grp['targets'] >= min_attempts].groupby('route')['success_rate'].max().values
 
 common_width = 40
 
@@ -104,15 +110,16 @@ def plot_bar(ax, df, stat, title, y_title):
 plot_bar(axes[0][0], rec_leaders, 'targets', 'Target Leaders', 'Targets')
 plot_bar(axes[0][1], tot_epa_leaders, 'tot_epa', 'Total EPA Leaders', 'Total EPA')
 plot_bar(axes[1][0], cpoe_leaders, 'CPOE', f'Aggregate CPOE Leaders', 'Aggregate CPOE')
-plot_bar(axes[1][1], avg_epa_leaders, 'avg_epa', f'EPA/Play Leaders - Min. {min_targets} Targets', 'EPA/Play')
+plot_bar(axes[1][1], avg_epa_leaders, 'avg_epa', f'EPA/Play Leaders - Min. {min_attempts} Attempts', 'EPA/Play')
+# plot_bar(axes[1][1], avg_success_leaders, 'success_rate', f'Success Rate Leaders - Min. {min_attempts} Attempts', 'Success Rate')
 
 fig.patch.set_facecolor('#F5DEB3')
-fig.suptitle(f'Top Passers by Route Type - {year}',
+fig.suptitle(f'Top Passers by Route Thru Week {max_week}, {year}',
              y=0.95,
              weight='bold',
              fontsize=16)
 
-fig.text(0.5, 0.91, 'by Jake Sanghavi', fontsize=12, ha='center')
+fig.text(0.9, 0.05, 'Credit: Jake Sanghavi', fontsize=10, ha='center')
 plt.subplots_adjust(wspace=0.15, hspace=0.15, left=0.05, right=0.95)
 
 plt.show()
