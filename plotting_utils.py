@@ -92,15 +92,10 @@ def get_team_names():
 
 
 def get_team_tags():
-    return {'ARI': '#RedSea', 'ATL': '#RiseUpATL', 'BAL': '#RavensFlock', 'BUF': '#BillsMafia', 'CAR': '#KeepPounding',
-            'CHI': '#DaBears',
-            'CIN': '#SEIZETHEDEY', 'CLE': '#Browns', 'DAL': '#DallasCowboys', 'DEN': '#BroncosCountry',
-            'DET': '#OnePride',
-            'GB': '#GoPackGo',
-            'HOU': '#WeAreTexans', 'IND': '#ForTheShoe', 'JAX': '#DUUUVAL', 'KC': '#ChiefsKingdom', 'LA': '#RamsHouse',
-            'LAC': '#BoltUp',
-            'LV': '#RaiderNation', 'MIA': '#FinsUp', 'MIN': '#Skol', 'NE': '#GoPats', 'NO': '#Saints',
-            'NYG': '#TogetherBlue',
-            'NYJ': '#JetsNation', 'PHI': '#FlyEaglesFly', 'PIT': '#HereWeGo', 'SEA': '#Seahawks', 'SF': '#FTTB',
-            'TB': '#GoBucs',
-            'TEN': '#Titans', 'WAS': '#WashingtonFootball'}
+    return {'ARI': '#BirdGang', 'ATL': '#RiseUp', 'BAL': '#RavensFlock', 'BUF': '#BillsMafia',
+            'CAR': '#KeepPounding', 'CHI': '#DaBears', 'CIN': '#WhoDey', 'CLE': '#DawgPound',
+            'DAL': '#DallasCowboys', 'DEN': '#BroncosCountry', 'DET': '#OnePride', 'GB': '#GoPackGo',
+            'HOU': '#HTownMade', 'IND': '#ForTheShoe', 'JAX': '#DUUUVAL', 'KC': '#ChiefsKingdom', 'LA': '#RamsHouse',
+            'LAC': '#BoltUp', 'LV': '#RaiderNation', 'MIA': '#PhinsUp', 'MIN': '#Skol', 'NE': '#NEPats',
+            'NO': '#Saints', 'NYG': '#TogetherBlue', 'NYJ': '#JetUp', 'PHI': '#FlyEaglesFly', 'PIT': '#HereWeGo',
+            'SEA': '#Seahawks', 'SF': '#FTTB', 'TB': '#WeAreTheKrewe', 'TEN': '#TitanUp', 'WAS': '#RaiseHail'}
