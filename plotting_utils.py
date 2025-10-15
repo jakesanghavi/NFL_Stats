@@ -62,3 +62,45 @@ def get_football_svg():
         "12 177 26 191 30 25 7 -39 73 -1060 1100 -597 601 -1089 1092 -1093 1092 -5 0 "
         "-8 -1 -8 -3"
     )
+
+
+def get_team_colors():
+    return {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D', 'CAR': '#0085CA', 'CHI': '#00143F',
+            'CIN': '#FB4F14', 'CLE': '#FB4F14', 'DAL': '#B0B7BC', 'DEN': '#002244', 'DET': '#046EB4', 'GB': '#24423C',
+            'HOU': '#C9243F', 'IND': '#003D79', 'JAX': '#136677', 'KC': '#CA2430', 'LA': '#002147', 'LAC': '#2072BA',
+            'LV': '#C4C9CC', 'MIA': '#0091A0', 'MIN': '#4F2E84', 'NE': '#0A2342', 'NO': '#A08A58', 'NYG': '#192E6C',
+            'NYJ': '#203731', 'PHI': '#014A53', 'PIT': '#FFC20E', 'SEA': '#7AC142', 'SF': '#C9243F', 'TB': '#D40909',
+            'TEN': '#4095D1', 'WAS': '#FFC20F'}
+
+
+def get_team_alt_colors():
+    return {'ARI': '#000000', 'ATL': '#000000', 'BAL': '#000000', 'BUF': '#c60c30', 'CAR': '#000000', 'CHI': '#c83803',
+            'CIN': '#fb4f14', 'CLE': '#22150c', 'DAL': '#b0b7bc', 'DEN': '#fb4f14', 'DET': '#b0b7bc', 'GB': '#ffb612',
+            'HOU': '#a71930', 'IND': '#a5acaf', 'JAX': '#006778', 'KC': '#ffb612', 'LA': '#b3995d', 'LAC': '#0073cf',
+            'LV': '#000000', 'MIA': '#f58220', 'MIN': '#ffc62f', 'NE': '#c60c30', 'NO': '#000000', 'NYG': '#a71930',
+            'NYJ': '#1c2d25', 'PHI': '#a5acaf', 'PIT': '#ffb612', 'SEA': '#69be28', 'SF': '#b3995d', 'TB': '#34302b',
+            'TEN': '#4b92db', 'WAS': '#ffb612'}
+
+
+def get_team_names():
+    return {'ARI': 'CARDINALS', 'ATL': 'FALCONS', 'BAL': 'RAVENS', 'BUF': 'BILLS', 'CAR': 'PANTHERS', 'CHI': 'BEARS',
+            'CIN': 'BENGALS', 'CLE': 'BROWNS', 'DAL': 'COWBOYS', 'DEN': 'BRONCOS', 'DET': 'LIONS', 'GB': 'PACKERS',
+            'HOU': 'TEXANS', 'IND': 'COLTS', 'JAX': 'JAGUARS', 'KC': 'CHIEFS', 'LA': 'RAMS', 'LAC': 'CHARGERS',
+            'LV': 'RAIDERS', 'MIA': 'DOLPHINS', 'MIN': 'VIKINGS', 'NE': 'PATRIOTS', 'NO': 'SAINTS', 'NYG': 'GIANTS',
+            'NYJ': 'JETS', 'PHI': 'EAGLES', 'PIT': 'STEELERS', 'SEA': 'SEAHAWKS', 'SF': '49ERS', 'TB': 'BUCCANEERS',
+            'TEN': 'TITANS', 'WAS': 'WASHINGTON'}
+
+
+def get_team_tags():
+    return {'ARI': '#RedSea', 'ATL': '#RiseUpATL', 'BAL': '#RavensFlock', 'BUF': '#BillsMafia', 'CAR': '#KeepPounding',
+            'CHI': '#DaBears',
+            'CIN': '#SEIZETHEDEY', 'CLE': '#Browns', 'DAL': '#DallasCowboys', 'DEN': '#BroncosCountry',
+            'DET': '#OnePride',
+            'GB': '#GoPackGo',
+            'HOU': '#WeAreTexans', 'IND': '#ForTheShoe', 'JAX': '#DUUUVAL', 'KC': '#ChiefsKingdom', 'LA': '#RamsHouse',
+            'LAC': '#BoltUp',
+            'LV': '#RaiderNation', 'MIA': '#FinsUp', 'MIN': '#Skol', 'NE': '#GoPats', 'NO': '#Saints',
+            'NYG': '#TogetherBlue',
+            'NYJ': '#JetsNation', 'PHI': '#FlyEaglesFly', 'PIT': '#HereWeGo', 'SEA': '#Seahawks', 'SF': '#FTTB',
+            'TB': '#GoBucs',
+            'TEN': '#Titans', 'WAS': '#WashingtonFootball'}
