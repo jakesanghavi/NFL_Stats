@@ -5,6 +5,7 @@ from pathlib import Path
 from svgpath2mpl import parse_path
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import plotting_utils
+import os
 import requests
 
 COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D', 'CAR': '#0085CA', 'CHI': '#00143F',
@@ -22,6 +23,8 @@ year = 2025
 season_type = "reg"
 
 filepath = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
+if not os.path.isfile(filepath):
+    raise ValueError(f"Error: {filepath} not found.")
 
 data = pd.read_csv(filepath, low_memory=False)
 pd.options.mode.chained_assignment = None

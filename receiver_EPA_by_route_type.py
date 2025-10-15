@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 from pathlib import Path
 from difflib import SequenceMatcher
+import os
 
 
 def change_width(ax, new_value):
@@ -21,11 +22,16 @@ year = 2025
 season_type = "reg"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
+if not os.path.isfile(filename):
+    raise ValueError(f"Error: {filename} not found.")
 
 # Select your data file here
 data = pd.read_csv(filename, low_memory=False)
 
 pfr_filename = Path.cwd() / "DataPack" / f"pfr_receiving_totals_{year}.csv"
+if not os.path.isfile(pfr_filename):
+        raise ValueError(f"Error: {pfr_filename} not found.")
+
 pfr_data = pd.read_csv(pfr_filename)
 pd.options.mode.chained_assignment = None
 

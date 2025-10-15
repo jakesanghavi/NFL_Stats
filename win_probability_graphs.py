@@ -32,6 +32,8 @@ year = 2025
 season_type = "reg"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
+if not os.path.isfile(filename):
+    raise ValueError(f"Error: {filename} not found.")
 
 # Input your play-by-play data here
 data = pd.read_csv(filename, low_memory=False)

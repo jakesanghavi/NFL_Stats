@@ -14,6 +14,9 @@ plt.rcParams["font.family"] = "serif"
 base = Path.cwd() / "DataPack" / "nflFastR"
 year_dirs = [int(p.name) for p in base.iterdir() if p.is_dir() and p.name.isdigit()]
 
+if year_dirs is None or len(year_dirs) == 0:
+    raise ValueError("Error: No nflFastR PBP files found.")
+
 min_year = min(year_dirs)
 max_year = max(year_dirs)
 years = [y for y in range(1999, max_year+1)]
@@ -85,6 +88,10 @@ axis_append = "Net " if plot_type == "3" else ""
 
 for year in years:
     filename = Path.cwd() / "DataPack" / "nflFastR" / str(year) / f"reg_season_play_by_play_{year}.csv"
+    
+    if not os.path.isfile(filename):
+        raise ValueError(f"Error: {filename} not found.")
+    
     df = pd.read_csv(filename, low_memory=False)
     df = df.loc[df['week'] <= max_week]
     df = df[~df['desc'].str.upper().str.contains('TWO-POINT CONVERSION ATTEMPT')]

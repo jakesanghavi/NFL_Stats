@@ -9,6 +9,7 @@ import matplotlib.patches as mpatches
 from matplotlib.legend_handler import HandlerPatch
 from pathlib import Path
 import matplotlib.image as mpimg
+import os
 import plotting_utils
 from difflib import SequenceMatcher
 
@@ -36,11 +37,15 @@ year = 2025
 season_type = "reg"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
+if not os.path.isfile(filename):
+    raise ValueError(f"Error: {filename} not found.")
 
 data = pd.read_csv(filename, low_memory=False)
 pd.options.mode.chained_assignment = None
 
 pfr_filename = Path.cwd() / "DataPack" / f"pfr_receiving_totals_{year}.csv"
+if not os.path.isfile(pfr_filename):
+        raise ValueError(f"Error: {pfr_filename} not found.")
 pfr_data = pd.read_csv(pfr_filename)
 
 pd.set_option('display.max_rows', 100)

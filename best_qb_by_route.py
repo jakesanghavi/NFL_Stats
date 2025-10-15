@@ -4,6 +4,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from pathlib import Path
 import pandas as pd
 import requests
+import os
 import plotting_utils
 
 COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D', 'CAR': '#0085CA', 'CHI': '#00143F',
@@ -20,6 +21,9 @@ min_attempts = 4
 plt.rcParams["font.family"] = "serif"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
+
+if not os.path.isfile(filename):
+    raise ValueError(f"Error: {filename} not found.")
 
 data = pd.read_csv(filename, low_memory=False)
 max_week = np.max(data['week'])
