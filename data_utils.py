@@ -665,7 +665,7 @@ def get_pfr_passing_data(year):
     save_file(frame, dirname, filename)
 
 
-def get_all_data(year, api_key, min_week=1):
+def get_all_data(year, api_key, sportradar=True, min_week=1):
     today = date.today()
 
     if today.year > year:
@@ -689,9 +689,10 @@ def get_all_data(year, api_key, min_week=1):
         raise ValueError("Year cannot be greater than current year.")
 
     get_single_season_data(year)
-    get_sportradar_schedule(year, api_key)
-    get_sportradar_data(year, api_key, min_week, max_week)
     get_nflfastr_ids(year)
-    merge_nflfastr_and_sportradar(year)
+    if sportradar:
+        get_sportradar_schedule(year, api_key)
+        get_sportradar_data(year, api_key, min_week, max_week)
+        merge_nflfastr_and_sportradar(year)
     get_pfr_receiving_data(year)
     get_pfr_passing_data(year)
