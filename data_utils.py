@@ -24,6 +24,16 @@ def safe_get(d, *keys):
     return cur
 
 
+def key_exists(d, key):
+    if isinstance(d, dict):
+        if key in d:
+            return True
+        return any(key_exists(v, key) for v in d.values())
+    elif isinstance(d, list):
+        return any(key_exists(i, key) for i in d)
+    return False
+
+
 def save_file(data, directory, filename):
     cwd = Path.cwd()
     data_pack_dir = cwd / directory
@@ -162,7 +172,7 @@ def get_sportradar_schedule(year, api_key, access_level="trial"):
             if response.status_code == 200:
                 data = response.json()
                 year = date.today().year
-                filename = f"sportradar_json_{season_type}_schedule_{year}.json"
+                filename = f"sportradar_json_{season_type.replace('PST', 'POST')}_schedule_{year}.json"
                 dirname = Path("DataPack") / "SportRadar" / str(year) / "Games" / season_type.replace('PST', 'POST')
                 save_file(data, dirname, filename)
 
@@ -209,28 +219,34 @@ def get_sportradar_data(year, api_key, min_week=1, max_week=17, access_level="tr
         if ids_file is None:
             year = today.year
             ids_path = Path.cwd() / "DataPack" / "SportRadar" / str(
-                year) / "Games" / season_type / f"sportradar_{season_type}_schedule_{year}.csv"
+                year) / "Games" / season_type.replace('PST', 'POST') / f"sportradar_{season_type.replace('PST', 'POST')}_schedule_{year}.csv"
             ids_file = pd.read_csv(ids_path)
             ids_file = ids_file.loc[(ids_file['week'] <= max_week) & (ids_file['week'] >= min_week)]
 
         dirname = Path.cwd() / "DataPack" / "SportRadar" / str(year) / "Games" / season_type.replace('PST', 'POST')
         for _, row in ids_file.iterrows():
             game_id = row['game_id']
-            filename = dirname / f'{game_id}.json'
-            
-            # Don't write a new file if the file already exists AND 
+            filename = dirname / f'_{game_id}.json'
+
+            # Don't write a new file if the file already exists AND
             # the game was over 1 week ago
             # Sometimes the sportradar data doesn't upload properly
-            if os.path.isfile(filename) and ids_file[ids_file['game_id'] == game_id]['week'].iloc[0] < max_week - 1:
+            if os.path.isfile(filename):
                 continue
             game_url = f"http://api.sportradar.us/nfl/official/{access_level}/v7/en/games/{game_id}/pbp.json?api_key={api_key}"
 
             data = extract_data(game_url)
 
-            save_file(data, dirname, f'{game_id}.json')
+            to_append = ""
+            if key_exists(data, "pass_route"):
+                to_append = "_"
+
+            save_file(data, dirname, f'{to_append}{game_id}.json')
 
             # Sleep to avoid blocking
             time.sleep(1)
+
+        ids_file = None
 
 
 def get_nflfastr_ids(year):
@@ -341,18 +357,22 @@ def extract_play_flat(ply, qtr_number, drv_sequence):
     return out
 
 
-def list_json_files(sr_dir):
+def list_json_files(sr_dir, char=""):
     if not os.path.isdir(sr_dir):
         return []
     # match .json files only
-    pattern = os.path.join(sr_dir, "*.json")
+    pattern = os.path.join(sr_dir, f"{char}*.json")
     files = glob.glob(pattern)
     files.sort()
     return files
 
 
-def basename_without_ext(path: str) -> str:
+def basename_without_ext(path, char=""):
     base = os.path.basename(path)
+
+    if len(char) > 0 and base.startswith(char):
+        base = base[1:]
+
     return re.sub(r'\.json$', '', base, flags=re.IGNORECASE)
 
 
@@ -390,7 +410,7 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
             sportradar_dirname = Path.cwd() / "DataPack" / "SportRadar" / str(year) / "Games" / season_type.replace(
                 'PST', 'POST')
 
-        all_sportradar_jsons = list_json_files(sportradar_dirname)
+        all_sportradar_jsons = list_json_files(sportradar_dirname, char="_")
 
         all_game_rows = []
         for jfile in all_sportradar_jsons:
@@ -410,7 +430,7 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
                     events = drv.get('events', []) or []
                     for ply in events:
                         flat = extract_play_flat(ply, qtr_number, drv_sequence)
-                        flat['game_file'] = basename_without_ext(jfile)
+                        flat['game_file'] = basename_without_ext(jfile, char="_")
                         all_game_rows.append(flat)
 
         if len(all_game_rows) == 0:
@@ -455,7 +475,7 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
                 })
 
         sport_gm_df = pd.DataFrame(gms_rows, columns=['week', 'home_tm', 'away_tm', 'game_id_sprt'])
-        nflfastr_csv = nflfastr_dirname / f"nflfastr_{season_type.lower()}_{year}_game_ids.csv"
+        nflfastr_csv = nflfastr_dirname / f"nflfastr_{season_type.replace('PST', 'POST').lower()}_{year}_game_ids.csv"
 
         if not os.path.isfile(nflfastr_csv):
             print(f"nflfastr game ids CSV not found at {nflfastr_csv}. Exiting.")
@@ -524,7 +544,7 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
         else:
             print("All game_file entries have a mapped game_id_scrp.")
 
-        same_yr_pbp_path = nflfastr_dirname / f"{season_type.lower()}_season_play_by_play_{year}.csv"
+        same_yr_pbp_path = nflfastr_dirname / f"{season_type.replace('PST', 'POST').lower()}_season_play_by_play_{year}.csv"
 
         if not os.path.isfile(same_yr_pbp_path):
             print(f"Regular season pbp CSV not found at {same_yr_pbp_path}. Exiting.")
@@ -565,6 +585,7 @@ def merge_nflfastr_and_sportradar(year, nflfastr_dirname=None, sportradar_dirnam
 
         all_filename = f"complete_{season_type.lower().replace('pst', 'post')}_pbp_{year}.csv"
         save_file(all_in_pbp, out_dir, all_filename)
+        sportradar_dirname = None
 
 
 def parse_row(row):
