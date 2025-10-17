@@ -27,9 +27,12 @@ def adjust_seconds_remaining(row):
     return row['game_seconds_remaining'] + extra_time
 
 
-# Specify the season you want to look at
+# Specify the game you want to look at
 year = 2025
 season_type = "reg"
+week = 1
+away_team = "LV"
+home_team = "NE"
 
 filename = Path.cwd() / "DataPack" / f"complete_{season_type}_pbp_{year}.csv"
 if not os.path.isfile(filename):
@@ -42,7 +45,7 @@ data = pd.read_csv(filename, low_memory=False)
 pd.options.mode.chained_assignment = None
 
 # Input your desired game id here
-game_id = '2025_05_DEN_PHI'
+game_id = f'{year}_{week if len(str(week)) > 1 else "0" + str(week)}_{away_team}_{home_team}'
 
 # Filter the data to only include data from your game.
 game_data = data.loc[data.game_id == game_id]
