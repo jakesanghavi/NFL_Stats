@@ -227,6 +227,7 @@ def get_sportradar_data(year, api_key, min_week=1, max_week=17, access_level="tr
         for _, row in ids_file.iterrows():
             game_id = row['game_id']
             filename = dirname / f'_{game_id}.json'
+            old_filename = dirname / f'{game_id}.json'
 
             # Don't write a new file if the file already exists AND
             # the game was over 1 week ago
@@ -240,6 +241,9 @@ def get_sportradar_data(year, api_key, min_week=1, max_week=17, access_level="tr
             to_append = ""
             if key_exists(data, "pass_route"):
                 to_append = "_"
+
+                if os.path.isfile(old_filename):
+                    os.remove(old_filename)
 
             save_file(data, dirname, f'{to_append}{game_id}.json')
 
