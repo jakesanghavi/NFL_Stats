@@ -19,7 +19,7 @@ COLORS2 = plotting_utils.get_team_alt_colors()
 TEAMS = plotting_utils.get_team_names()
 TAGS = plotting_utils.get_team_tags()
 
-hfont = {'family': 'monospace'}
+hfont = {'family': 'serif'}
 
 
 class HandlerEllipse(HandlerPatch):
