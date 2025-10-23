@@ -10,7 +10,17 @@ Repository for Scraping and Analyzing NFL Data
 
 **Wasn't that easy?**
 
-### Python Dependencies
+### Plotting Files Guide
+
+**QB Info**: Use `QB_dropback_analysis.py` for a classic EPA/CPOE plot, and `best_qb_by_route.py` to break things up by route.
+
+**Receiver Info**: use `best_wr_by_route.py` to break things up by route, and `receiver_field_overlay.py` to plot things over a field background.
+
+**Team Info**: use `historical_team_comparison.py` to show a current year's offense/defense/net performance by team as compared to historical squads.
+
+**Game Info**: use `win_probability_graphs.py` to plot the win probability for a given game as a time series.
+
+#### Python Dependencies
 
 ```
 adjustText
@@ -26,7 +36,7 @@ termcolor
 urllib3
 ```
 
-### Example Outputs
+#### Example Outputs
 
 <img src="https://user-images.githubusercontent.com/57878447/144541296-60678b6c-f01f-4bb1-a2dd-7d11a942d1a9.png" alt="Image 1" width=700/>
 <img src="https://user-images.githubusercontent.com/57878447/144541389-f892214a-cb72-434b-a4bc-53dbe2a83e36.png" alt="Image 2" width=700/>

@@ -7,11 +7,15 @@ import requests
 import os
 import plotting_utils
 
-COLORS = plotting_utils.get_team_colors()
+COLORS = {'ARI': '#97233F', 'ATL': '#A71930', 'BAL': '#241773', 'BUF': '#00338D', 'CAR': '#0085CA', 'CHI': '#00143F',
+          'CIN': '#FB4F14', 'CLE': '#FB4F14', 'DAL': '#B0B7BC', 'DEN': '#002244', 'DET': '#046EB4', 'GB': '#24423C',
+          'HOU': '#C9243F', 'IND': '#003D79', 'JAX': '#136677', 'KC': '#CA2430', 'LA': '#002147', 'LAC': '#2072BA',
+          'LV': '#C4C9CC', 'MIA': '#0091A0', 'MIN': '#4F2E84', 'NE': '#0A2342', 'NO': '#A08A58', 'NYG': '#192E6C',
+          'NYJ': '#203731', 'PHI': '#014A53', 'PIT': '#FFC20E', 'SEA': '#7AC142', 'SF': '#C9243F', 'TB': '#D40909',
+          'TEN': '#4095D1', 'WAS': '#FFC20F'}
 
 year = 2025
 season_type = "reg"
-min_targets = 4
 
 plt.rcParams["font.family"] = "serif"
 
@@ -21,6 +25,7 @@ if not os.path.isfile(filename):
 
 data = pd.read_csv(filename, low_memory=False)
 max_week = np.max(data['week'])
+min_targets = int(2*max_week/3)
 
 data['filter'] = data[['pass_route', 'receiver']].isna().any(axis=1)
 data = data.loc[data['filter'] == False].drop(columns=['filter'])
@@ -112,7 +117,7 @@ plot_bar(axes[1][1], avg_epa_leaders, 'avg_epa', f'EPA/Play Leaders - Min. {min_
 # plot_bar(axes[1][1], avg_success_leaders, 'success_rate', f'Success Rate Leaders - Min. {min_targets} Targets', 'Success Rate')
 
 fig.patch.set_facecolor('#F5DEB3')
-fig.suptitle(f'Top Receivers by Route Thru Week {max_week}, {year}',
+fig.suptitle(f'Top Receivers by Route Though Week {max_week}, {year}',
              y=0.95,
              weight='bold',
              fontsize=16)
