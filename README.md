@@ -41,8 +41,9 @@ urllib3
 <img alt="wr_plot" src="https://github.com/user-attachments/assets/33e0b8e0-cbb6-4a76-b99e-557ad9974900" />
 <img alt="qb_plot" src="https://github.com/user-attachments/assets/e3296bdf-a260-4689-bd29-b196401282be" />
 <img alt="hist" src="https://github.com/user-attachments/assets/ee230b7c-26e9-42c7-bac9-aa4d5a7de233" />
-<img alt="wr_field_plot" src="https://user-images.githubusercontent.com/57878447/144541900-d92356ca-2603-449e-b8c2-b4aacc678c21.png" width=700/>
-<img alt="wp_graph" src="https://user-images.githubusercontent.com/57878447/144541663-cd8c6139-0b30-4504-8697-868d6329301d.png" width=500/>
+<img alt="wr_field" src="https://github.com/user-attachments/assets/8440f26c-046d-497c-a202-c2c8953bb4c0" />
+<img width="861" height="811" alt="wp_graph" src="https://github.com/user-attachments/assets/40e04d9b-5322-421e-928f-b1bed77562e0" />
+
 
 #### Acknowledgements. 
 Thank you to the entire nflfastR team for the code to grab play-by-play data, check out their GitHub at https://github.com/nflverse/nflfastR.  
